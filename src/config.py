@@ -1,5 +1,5 @@
 # Server configs
-server_port = 770
+server_port = 8000
 
 # Mongo configs
 con_str = 'mongodb://localhost:27017/'
