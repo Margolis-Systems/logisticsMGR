@@ -1,0 +1,20 @@
+from src import db_handler, config
+import csv
+
+db_handle = db_handler.Mongo()
+
+
+def csv_to_mongo(csv_dir):
+    with open(csv_dir, newline='', encoding='utf8') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            print(row[1])
+            dic = {}
+            for k in config.user_items:
+                dic[k] = ''
+            dic['id'] = row[0]
+            dic['name'] = row[1].replace('*', "")
+            dic['last_name'] = row[2]
+            db_handle.create_user(dic)
+
+csv_to_mongo('list.csv')

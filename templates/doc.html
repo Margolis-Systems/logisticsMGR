@@ -1,0 +1,15 @@
+<tr><td colspan="10">{{data.rank}} {{data.name}} {{data.last_name}} | {{data.id}} | {{data.phone}} | {{data.department}}</td></tr>
+<tr>
+{% for item in doc_items %}
+    <th width="20%">{{dictionary[item]}}</th>
+{% endfor %}
+</tr>
+{% for doc in data.docs %}
+{% for line in doc['items'] %}
+<tr>
+{% for item in doc_items %}
+    <td>{{line[item]}}</td>
+{% endfor %}
+</tr>
+{% endfor %}
+{% endfor %}

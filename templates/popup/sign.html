@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <title>החתמה על ציוד</title>
+</head>
+<body class="display-1">
+    <form id="sign_form" method=POST>
+    <table class="table text-center table-striped" style="margin-left:auto;margin-right:auto;">
+        <tr>
+            <th colspan="5">החתמה על ציוד</th>
+        </tr>
+        <tr>
+            <td colspan="5"><input type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info()" required></td>
+        </tr>
+        <tr>
+            <td colspan="5"><input name="name" id="name" placeholder="שם פרטי" required></td>
+        </tr>
+        <tr>
+            <td colspan="5"><input name="last_name" id="last_name" placeholder="שם משפחה" required></td>
+        </tr>
+        <tr>
+            <td colspan="5"><input name="rank" id="rank" placeholder="דרגה"></td>
+        </tr>
+        <tr>
+            <td colspan="5"><input type="number" name="phone" id="phone" placeholder="טלפון"></td>
+        </tr>
+        <tr>
+            <td colspan="5"><input type="number" name="car_plate" id="car_plate" placeholder="מס רכב"></td>
+        </tr>
+        <tr>
+            <th colspan="3">שם</th>
+            <th>כמות</th>
+            <th>הערה</th>
+        </tr>
+        {% for i in range(10) %}
+        {% if i > 2 %}
+        <tr style="display:none;" id="row{{loop.index0}}">
+        {% else %}
+        <tr id="row{{loop.index0}}">
+        {% endif %}
+            <td colspan="3"><input class="form-control" name="item{{loop.index0}}" placeholder="שם"></td>
+            <td><input type="number" class="form-control" name="quantity{{loop.index0}}" placeholder="כמות"></td>
+            <td><input class="form-control" name="comment{{loop.index0}}" placeholder="הערה"></td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="2"><button type="submit" class="btn btn-success btn-lg">אישור</button></td><td></td><td colspan="2"><button type="button" onclick="add_row()" class="btn btn-primary btn-lg">+שורה</button></td></td>
+        </tr>
+    </table>
+    </form>
+</body>
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</html>
