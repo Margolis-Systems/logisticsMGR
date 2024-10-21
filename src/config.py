@@ -11,5 +11,6 @@ docs_col = 'docs'
 user_items = ['id', 'name', 'last_name', 'phone', 'rank', 'car_plate', 'department']
 
 #
-doc_items = ['num', 'cat', 'description', 'quantity', 'notes']
+doc_items = ['cat', 'description', 'quantity', 'notes']
+# doc_items = ['num', 'cat', 'description', 'quantity', 'notes']
 dictionary = {'num': "מס' דף וסד' של שורה", 'cat': "מספר קטלוגי", 'description': "שם", 'quantity': "כמות", 'notes': "הערות"}

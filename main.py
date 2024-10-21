@@ -27,21 +27,33 @@ def close():
 @app.route('/sign', methods=['POST', 'GET'])
 def sign():
     r_v = request.values
+    msg = ''
+    data = {}
     if request.form:
         r_f = dict(request.form)
         if 'return' in r_v:
             inventory.ret(r_f)
+            if 'id' in r_f:
+                data = db_handle.validate_user(r_f['id'])
         else:
             inventory.sign(r_f)
-        return redirect('/close')
+            return redirect('/close')
     if 'return' in r_v:
-        return render_template('popup/return.html')
+        d_i = config.doc_items.copy()
+        d_i.append('check')
+        return render_template('popup/return.html', data=data, doc_items=d_i, msg=msg,
+                               dictionary=config.dictionary)
     return render_template('popup/sign.html')
 
 
 @app.route('/inv', methods=['POST', 'GET'])
 def inv():
     return render_template('inventory.html')
+
+
+@app.route('/get_info', methods=['POST', 'GET'])
+def get_info():
+    return db_handle.validate_user(request.values['id'])
 
 
 if __name__ == '__main__':

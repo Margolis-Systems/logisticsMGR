@@ -1,17 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<form id="sign_form" method=POST></form>
-<table>
+<form method="POST">
+    <table class="table table-bordered table-striped text-center" style="margin-left:auto;margin-right:auto;">
     <tr>
-        <td>החזרה</td>
-        <td><button type="button" onclick="send_form('sign_form')"></button></td>
+        <td colspan="10">
+            {%if not data.id%}
+            <label for="idinpt">מס אישי</label><input type="number" id="idinpt" name="id" placeholder="הזן מס אישי" autofocus>
+            {% else %}
+            <input type="hidden" name="id" value="{{data.id}}">
+            {%endif%}
+        </td>
     </tr>
-</table>
+    <tr><td colspan="10">{{msg}}</td></tr>
+    {% if data %}
+        {% if data.docs %}
+        {% include 'doc.html' %}
+        {% endif %}
+    {% endif %}
+        <tr>
+            {% if data %}
+            <td><button type="button" class="btn btn-warning btn-lg" onclick="location.href='/sign?return='">חזור</button></td>
+            <td colspan="3"><button class="btn btn-success btn-lg">זיכוי</button></td>
+            <td><button type="button" class="btn btn-danger btn-lg" onclick="window.close();">סגור</button></td>
+            {% else %}
+            <td colspan="5"><button class="btn btn-success btn-lg">OK</button></td>
+            {% endif %}
+        </tr>
+    </table>
+</form>
 </body>
 <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 </html>

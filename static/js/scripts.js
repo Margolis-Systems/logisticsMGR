@@ -4,7 +4,17 @@ const openNewWindow = (editorUrl) => {
 };
 
 function get_info(person_id){
-
+    var data
+    $.getJSON('/get_info?id='+person_id, function(data) {
+        $('#result').text(data);
+        for(k in data){
+            console.log(k, data[k])
+            elem = document.getElementById(k);
+            if (elem){
+                elem.value = data[k];
+            }
+        }
+    });
 }
 
 var r_index = 2;

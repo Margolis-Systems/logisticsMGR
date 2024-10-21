@@ -12,7 +12,7 @@
             <th colspan="5">החתמה על ציוד</th>
         </tr>
         <tr>
-            <td colspan="5"><input type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info()" required></td>
+            <td colspan="5"><input type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
         </tr>
         <tr>
             <td colspan="5"><input name="name" id="name" placeholder="שם פרטי" required></td>
@@ -24,7 +24,10 @@
             <td colspan="5"><input name="rank" id="rank" placeholder="דרגה"></td>
         </tr>
         <tr>
-            <td colspan="5"><input type="number" name="phone" id="phone" placeholder="טלפון"></td>
+            <td colspan="5"><input name="department" id="department" placeholder="מחלקה"></td>
+        </tr>
+        <tr>
+            <td colspan="5"><input type="number" name="phone" id="phone" placeholder="טלפון" required></td>
         </tr>
         <tr>
             <td colspan="5"><input type="number" name="car_plate" id="car_plate" placeholder="מס רכב"></td>
@@ -40,9 +43,9 @@
         {% else %}
         <tr id="row{{loop.index0}}">
         {% endif %}
-            <td colspan="3"><input class="form-control" name="item{{loop.index0}}" placeholder="שם"></td>
-            <td><input type="number" class="form-control" name="quantity{{loop.index0}}" placeholder="כמות"></td>
-            <td><input class="form-control" name="comment{{loop.index0}}" placeholder="הערה"></td>
+            <td colspan="3"><input class="form-control" name="item{{loop.index0}}" placeholder="שם" {% if loop.index0==0 %}required{% endif %}></td>
+            <td><input type="number" class="form-control" name="quantity{{loop.index0}}" placeholder="כמות" {% if loop.index0==0 %}required{% endif %}></td>
+            <td><input class="form-control" name="note{{loop.index0}}" placeholder="הערה"></td>
         </tr>
         {% endfor %}
         <tr>
@@ -52,4 +55,5 @@
     </form>
 </body>
 <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
 </html>

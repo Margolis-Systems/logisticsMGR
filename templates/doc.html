@@ -6,10 +6,18 @@
 </tr>
 {% for doc in data.docs %}
 {% for line in doc['items'] %}
+{% set idx=0 %}
 <tr>
 {% for item in doc_items %}
-    <td>{{line[item]}}</td>
+    <td>
+        {% if item != 'check' %}
+        {{line[item]}}
+        {% else %}
+        <input type="checkbox" name="{{doc['date']}}|{{idx}}" value="rem">
+        {% endif %}
+    </td>
 {% endfor %}
 </tr>
+{% set idx=idx+1 %}
 {% endfor %}
 {% endfor %}
