@@ -35,6 +35,10 @@ def sign():
             inventory.ret(r_f)
             if 'id' in r_f:
                 data = db_handle.validate_user(r_f['id'])
+                if not data:
+                    data = {'docs': ''}
+                if not data['docs']:
+                    msg = 'לא נמצאו טפסים לזיכוי'
         else:
             inventory.sign(r_f)
             return redirect('/close')
@@ -43,7 +47,7 @@ def sign():
         d_i.append('check')
         return render_template('popup/return.html', data=data, doc_items=d_i, msg=msg,
                                dictionary=config.dictionary)
-    return render_template('popup/sign.html')
+    return render_template('popup/sign.html', descriptions=config.descriptions)
 
 
 @app.route('/inv', methods=['POST', 'GET'])
@@ -57,6 +61,9 @@ def get_info():
 
 
 if __name__ == '__main__':
+    temp = db_handle.read_list('descriptions')
+    if temp:
+        config.descriptions = temp['list']
     app.secret_key = 'afd345eh%##$'
     app.run(host="0.0.0.0", port=config.server_port, debug=True)
 

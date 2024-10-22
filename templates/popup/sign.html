@@ -6,7 +6,7 @@
     <title>החתמה על ציוד</title>
 </head>
 <body class="display-1">
-    <form id="sign_form" method=POST>
+    <form id="sign_form" method=POST autocomplete="off">
     <table class="table text-center table-striped" style="margin-left:auto;margin-right:auto;">
         <tr>
             <th colspan="5">החתמה על ציוד</th>
@@ -43,9 +43,14 @@
         {% else %}
         <tr id="row{{loop.index0}}">
         {% endif %}
-            <td colspan="3"><input class="form-control" name="item{{loop.index0}}" placeholder="שם" {% if loop.index0==0 %}required{% endif %}></td>
+            <td colspan="3"><input list="descriptions" class="form-control" name="item{{loop.index0}}" placeholder="שם" {% if loop.index0==0 %}required{% endif %}></td>
             <td><input type="number" class="form-control" name="quantity{{loop.index0}}" placeholder="כמות" {% if loop.index0==0 %}required{% endif %}></td>
             <td><input class="form-control" name="note{{loop.index0}}" placeholder="הערה"></td>
+            <datalist id="descriptions">
+                {% for d in descriptions %}
+                <option value="{{d}}">{{d}}</option>
+                {% endfor %}
+            </datalist>
         </tr>
         {% endfor %}
         <tr>

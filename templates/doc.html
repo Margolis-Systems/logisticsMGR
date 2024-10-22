@@ -13,7 +13,7 @@
         {% if item != 'check' %}
         {{line[item]}}
         {% else %}
-        <input type="checkbox" name="{{doc['date']}}|{{idx}}" value="rem">
+        <input type="number" min="1" max="{{line['quantity']}}" name="{{doc['date']}}|{{idx}}" value="rem">
         {% endif %}
     </td>
 {% endfor %}
