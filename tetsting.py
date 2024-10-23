@@ -8,7 +8,8 @@ def csv_to_mongo(csv_dir):
     with open(csv_dir, newline='', encoding='utf8') as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
-            print(row[1])
+            if db_handle.validate_user(row[0]):
+                continue
             dic = {}
             for k in config.user_items:
                 dic[k] = ''
