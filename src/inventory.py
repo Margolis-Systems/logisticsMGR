@@ -25,7 +25,7 @@ def ret(dic):
         if len(q) > 1 and dic[item]:
             print('ok')
             date = q[0]
-            index = q[1]
+            index = int(q[1])
             quantity = int(dic[item])
             db_handle.return_item(dic['id'],date , index, quantity)
     return
