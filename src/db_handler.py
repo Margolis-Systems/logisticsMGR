@@ -41,7 +41,6 @@ class Mongo:
         date = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S.%f')
         to_update = self.db[config.docs_col].find_one({'to': person_id, 'date': date})
         if int(to_update['items'][index]['quantity']) <= quantity:
-            print(1)
             del to_update['items'][index]
         else:
             to_update['items'][index]['quantity'] = str(int(to_update['items'][index]['quantity']) - quantity)
@@ -49,4 +48,3 @@ class Mongo:
             self.db[config.docs_col].update_one({'to': person_id, 'date': date}, {'$set': {'items': to_update['items']}})
         else:
             self.db[config.docs_col].delete_one({'to': person_id, 'date': date})
-        print(to_update)

@@ -5,6 +5,9 @@
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
     <title>החתמה על ציוד</title>
 </head>
+<style>
+    input{width:400px};
+</style>
 <body class="display-1">
     <form id="sign_form" method=POST autocomplete="off">
     <table class="table text-center table-striped" style="margin-left:auto;margin-right:auto;">
@@ -12,28 +15,28 @@
             <th colspan="5">החתמה על ציוד</th>
         </tr>
         <tr>
-            <td colspan="5"><input type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
+            <td colspan="5"><input size="8" type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
         </tr>
         <tr>
-            <td colspan="5"><input name="name" id="name" placeholder="שם פרטי" required></td>
+            <td colspan="5"><input size="8" name="name" id="name" placeholder="שם פרטי" required></td>
         </tr>
         <tr>
-            <td colspan="5"><input name="last_name" id="last_name" placeholder="שם משפחה" required></td>
+            <td colspan="5"><input size="8" name="last_name" id="last_name" placeholder="שם משפחה" required></td>
         </tr>
         <tr>
-            <td colspan="5"><input name="rank" id="rank" placeholder="דרגה"></td>
+            <td colspan="5"><input size="8" name="rank" id="rank" placeholder="דרגה"></td>
         </tr>
         <tr>
-            <td colspan="5"><input name="department" id="department" placeholder="מחלקה"></td>
+            <td colspan="5"><input size="8" name="department" id="department" placeholder="מחלקה"></td>
         </tr>
         <tr>
-            <td colspan="5"><input type="number" name="phone" id="phone" placeholder="טלפון" required></td>
+            <td colspan="5"><input size="8" type="number" name="phone" id="phone" placeholder="טלפון"></td>
         </tr>
         <tr>
-            <td colspan="5"><input type="number" name="car_plate" id="car_plate" placeholder="מס רכב"></td>
+            <td colspan="5"><input size="8" type="number" name="car_plate" id="car_plate" placeholder="מס רכב"></td>
         </tr>
         <tr>
-            <th colspan="3">שם</th>
+            <th>שם</th>
             <th>כמות</th>
             <th>הערה</th>
         </tr>
@@ -43,9 +46,9 @@
         {% else %}
         <tr id="row{{loop.index0}}">
         {% endif %}
-            <td colspan="3"><input list="descriptions" class="form-control" name="item{{loop.index0}}" placeholder="שם" {% if loop.index0==0 %}required{% endif %}></td>
-            <td><input type="number" class="form-control" name="quantity{{loop.index0}}" placeholder="כמות" {% if loop.index0==0 %}required{% endif %}></td>
-            <td><input class="form-control" name="note{{loop.index0}}" placeholder="הערה"></td>
+            <td><input size="10" list="descriptions" name="item{{loop.index0}}" placeholder="שם" {% if loop.index0==0 %}required{% endif %}></td>
+            <td><input size="2" type="number" name="quantity{{loop.index0}}" placeholder="כמות" {% if loop.index0==0 %}required{% endif %}></td>
+            <td><input size="10" name="note{{loop.index0}}" placeholder="הערה"></td>
             <datalist id="descriptions">
                 {% for d in descriptions %}
                 <option value="{{d}}">{{d}}</option>
@@ -54,7 +57,7 @@
         </tr>
         {% endfor %}
         <tr>
-            <td colspan="2"><button type="submit" class="btn btn-success btn-lg">אישור</button></td><td></td><td colspan="2"><button type="button" onclick="add_row()" class="btn btn-primary btn-lg">+שורה</button></td></td>
+            <td colspan="2"><button type="submit" class="btn btn-success btn-lg">אישור</button></td><td colspan="2"><button type="button" onclick="add_row()" class="btn btn-primary btn-lg">+שורה</button></td></td>
         </tr>
     </table>
     </form>

@@ -21,9 +21,7 @@ def ret(dic):
     # '2024-10-22 09:10:58.122000|0': ''}
     for item in dic:
         q = item.split('|')
-        print(q, dic)
         if len(q) > 1 and dic[item]:
-            print('ok')
             date = q[0]
             index = int(q[1])
             quantity = int(dic[item])
