@@ -22,7 +22,9 @@ class Mongo:
         ret = self.db[config.users_col].find_one({'id': uid}, {'_id': False})
         if ret:
             ret = dict(ret)
-            ret['docs'] = list(self.db[config.docs_col].find({'to': uid}, {'_id': False}))
+            ret['docs'] = list(self.db[config.docs_col].find({'id': uid}, {'_id': False}))
+        else:
+            ret = {}
         return ret
 
     def read_list(self, list_name):
@@ -34,17 +36,19 @@ class Mongo:
                 if item['description'] not in config.descriptions:
                     config.descriptions.append(item['description'])
                     self.db[config.lists_col].update_one({'name': 'descriptions'}, {'$push': {'list': item['description']}})
-        self.db[config.docs_col].update_one({'to': doc['to'], 'date': doc['date']}, {'$set': doc}, upsert=True)
-        # todo: send SMS
+        self.db[config.docs_col].update_one({'id': doc['id'], 'date': doc['date']}, {'$set': doc}, upsert=True)
 
     def return_item(self, person_id, date, index, quantity):
         date = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S.%f')
-        to_update = self.db[config.docs_col].find_one({'to': person_id, 'date': date})
+        to_update = self.db[config.docs_col].find_one({'id': person_id, 'date': date})
         if int(to_update['items'][index]['quantity']) <= quantity:
             del to_update['items'][index]
         else:
             to_update['items'][index]['quantity'] = str(int(to_update['items'][index]['quantity']) - quantity)
         if len(to_update['items']) > 0:
-            self.db[config.docs_col].update_one({'to': person_id, 'date': date}, {'$set': {'items': to_update['items']}})
+            self.db[config.docs_col].update_one({'id': person_id, 'date': date}, {'$set': {'items': to_update['items']}})
         else:
-            self.db[config.docs_col].delete_one({'to': person_id, 'date': date})
+            self.db[config.docs_col].delete_one({'id': person_id, 'date': date})
+
+    def all_inv(self, p_id=''):
+        return list(self.db[config.docs_col].find({}, {'_id': False}).sort([('department', 1), ('last_name', 1), ('name', 1)]))

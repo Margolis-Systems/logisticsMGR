@@ -3,8 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-
+<table class="table text-center table-striped" style="margin-left:auto;margin-right:auto;">
+{% for doc in inv %}
+    <tr>
+        <th colspan="10">{{doc.last_name}} {{doc.name}} {{doc.id}}</th>
+    </tr>
+    <tr>
+        {% for k in doc['items'][0] %}
+        <th>{{dictionary[k]}}</th>
+        {% endfor %}
+    </tr>
+    {% for line in doc['items'] %}
+    <tr>
+        {% for k in line %}
+        <td>{{line[k]}}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    <tr><td colspan="10"><button type="button" class="btn btn-warning btn-lg" onclick="location.href='/'">חזרה</button></td></tr>
+{% endfor %}
+</table>
 </body>
 </html>

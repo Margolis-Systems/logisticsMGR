@@ -10,7 +10,7 @@
 <tr>
 {% for item in doc_items %}
     <td>
-        {% if item != 'check' %}
+        {% if item != 'to_ret' %}
         {{line[item]}}
         {% else %}
         <input type="number" min="1" max="{{line['quantity']}}" name="{{doc['date']}}|{{idx}}" value="rem">

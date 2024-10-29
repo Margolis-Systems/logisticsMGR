@@ -22,3 +22,16 @@ function add_row(){
     r_index += 1;
     document.getElementById('row'+r_index.toString()).style.display = 'table-row';
 }
+
+function add_required(elem_id, cur_val){
+    console.log(cur_val)
+    element = document.getElementById(elem_id)
+    if (element){
+        if (cur_val){
+            element.required = true;
+        }
+        else{
+            element.required = false;
+        }
+    }
+}
