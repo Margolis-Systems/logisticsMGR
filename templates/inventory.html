@@ -5,9 +5,11 @@
     <title>Title</title>
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="display-1">
 <table class="table text-center table-striped" style="margin-left:auto;margin-right:auto;">
+{% set ns = namespace(last_id='') %}
 {% for doc in inv %}
+    {% if doc.id!=ns.last_id %}
     <tr>
         <th colspan="10">{{doc.last_name}} {{doc.name}} {{doc.id}}</th>
     </tr>
@@ -16,6 +18,7 @@
         <th>{{dictionary[k]}}</th>
         {% endfor %}
     </tr>
+    {% endif %}
     {% for line in doc['items'] %}
     <tr>
         {% for k in line %}
@@ -23,6 +26,7 @@
         {% endfor %}
     </tr>
     {% endfor %}
+    {% set ns.last_id = doc.id %}
 {% endfor %}
     <tr><td colspan="10"><button type="button" class="btn btn-warning btn-lg" onclick="location.href='/'">חזרה</button></td></tr>
 </table>
