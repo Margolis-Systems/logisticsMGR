@@ -9,25 +9,28 @@
     <form method="POST">
         <table class="table table-bordered table-striped text-center" style="margin-left:auto;margin-right:auto;">
             <tr><td colspan="10"><img src="static/img/Pakar.svg.png" height="100"></td></tr>
-        {% if data %}
-            {% if data.department == 'לוגיסטיקה' %}
-            {% include 'toolbar.html' %}
+            {% if data %}
+                {% if data.department == 'לוגיסטיקה' %}
+                {% include 'toolbar.html' %}
+                {% endif %}
+                {% if data.docs %}
+                {% include 'doc.html' %}
+                {% else %}
+            <tr>
+                <td colspan="10">לא נמצאו טפסים לחתימה</td>
+            </tr>
             {% endif %}
-            {% if data.docs %}
-            {% include 'doc.html' %}
             {% else %}
-                <tr>
-                    <td colspan="10">לא נמצאו טפסים לחתימה</td>
-                </tr>
-            {% endif %}
-        {% else %}
-        <tr>
-            <td colspan="10">
-                <label for="idinpt">מס אישי</label><input type="number" id="idinpt" name="id" placeholder="הזן מס אישי" autofocus>
-            </td>
-        </tr>
+            <tr>
+                <td colspan="10">
+                    <label for="idinpt">מס אישי</label><input type="number" id="idinpt" name="id" placeholder="הזן מס אישי" autofocus>
+                </td>
+            </tr>
             <tr><td colspan="10">{{msg}}</td></tr>
-        {% endif %}
+            {% endif %}
+            {% if data %}
+            <tr><td colspan="5"><button class="btn btn-danger" type="button" onclick="location.href='/logout'">יציאה</button></td></tr>
+            {% endif %}
         </table>
     </form>
 </body>
