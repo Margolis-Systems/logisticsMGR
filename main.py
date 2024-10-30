@@ -54,6 +54,7 @@ def sign():
                             if not data['docs']:
                                 msg = 'לא נמצאו טפסים לזיכוי'
                     else:
+                        r_f['from'] = session['username']
                         if inventory.sign(r_f):
                             if 'phone' in r_f:
                                 if r_f['phone']:

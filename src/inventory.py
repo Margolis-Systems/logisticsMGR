@@ -3,10 +3,8 @@ from datetime import datetime
 
 
 def sign(dic):
-    if not db_handle.validate_user(dic['id']):
-        db_handle.create_user(dic)
-    # todo: from. id from session
-    doc = {'from': '', 'date': datetime.now(), 'items': [], 'sign': False}
+    db_handle.create_user(dic)
+    doc = {'date': datetime.now(), 'items': [], 'sign': False}
     for k in dic:
         if 'item' in k and dic[k]:
             # todo: 'cat'?
