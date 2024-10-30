@@ -16,6 +16,15 @@ function get_info(person_id){
         }
     });
 }
+function scroll_to_row(text){
+    var rows = document.querySelectorAll('#inv_tb th');
+    for (r in rows){
+        if (rows[r].innerHTML.indexOf(text) != -1){
+            rows[r].scrollIntoView({behavior: 'smooth'});
+            break;
+        }
+    }
+}
 
 var r_index = 2;
 function add_row(){

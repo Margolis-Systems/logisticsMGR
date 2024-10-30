@@ -10,7 +10,7 @@
         <table class="table table-bordered table-striped text-center" style="margin-left:auto;margin-right:auto;">
             <tr><td colspan="10"><img src="static/img/Pakar.svg.png" height="100"></td></tr>
             {% if data %}
-                {% if data.department == 'לוגיסטיקה' %}
+                {% if data.department == page_data['department'] %}
                 {% include 'toolbar.html' %}
                 {% endif %}
                 {% if data.docs %}

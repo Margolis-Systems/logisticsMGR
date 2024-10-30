@@ -13,7 +13,7 @@
         {% if item != 'to_ret' %}
         {{line[item]}}
         {% else %}
-        <input type="number" min="1" max="{{line['quantity']}}" name="{{doc['date']}}|{{idx}}" value="rem">
+        <input type="number" min="1" max="{{line['quantity']}}" name="{{doc['date']}}|{{idx}}" value="">
         {% endif %}
     </td>
 {% endfor %}

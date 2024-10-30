@@ -19,7 +19,8 @@ def main_page():
             msg = 'לא נמצאו תוצאות'
     elif 'username' in session:
         data = db_handle.validate_user(session['username'])
-    return render_template('main.html', data=data, doc_items=config.doc_items, msg=msg, dictionary=config.dictionary)
+    return render_template('main.html', data=data, doc_items=config.doc_items, msg=msg, dictionary=config.dictionary,
+                           page_data={'department':config.admin_department})
 
 
 @app.route('/close', methods=['GET'])
@@ -32,16 +33,22 @@ def sign():
     if 'username' in session:
         user = db_handle.validate_user(session['username'])
         if user:
-            if user['department'] == 'לוגיסטיקה':
+            if user['department'] == config.admin_department:
                 r_v = request.values
                 msg = ''
                 data = {}
-                if request.form:
+                if request.form or 'id' in r_v:
                     r_f = dict(request.form)
                     if 'return' in r_v:
                         inventory.ret(r_f)
                         if 'id' in r_f:
                             data = db_handle.validate_user(r_f['id'])
+                            if not data:
+                                data = {'docs': ''}
+                            if not data['docs']:
+                                msg = 'לא נמצאו טפסים לזיכוי'
+                        elif 'id' in r_v:
+                            data = db_handle.validate_user(r_v['id'])
                             if not data:
                                 data = {'docs': ''}
                             if not data['docs']:
@@ -67,7 +74,7 @@ def inv():
     if 'username' in session:
         user = db_handle.validate_user(session['username'])
         if user:
-            if user['department'] == 'לוגיסטיקה':
+            if user['department'] == config.admin_department:
                 p_id = ''
                 if 'p_id' in request.values:
                     p_id = request.values['p_id']
@@ -81,7 +88,7 @@ def get_info():
     if 'username' in session:
         user = db_handle.validate_user(session['username'])
         if user:
-            if user['department'] == 'לוגיסטיקה':
+            if user['department'] == config.admin_department:
                 return db_handle.validate_user(request.values['id'])
     return {}
 
@@ -92,10 +99,27 @@ def logout():
     session.modified = True
     return redirect('/')
 
+
+@app.route('/init')
+def init(force=False):
+    if not force:
+        if 'username' in session:
+            user = db_handle.validate_user(session['username'])
+            if user:
+                if user['department'] != config.admin_department:
+                    return
+            else:
+                return
+    config.descriptions = db_handle.read_list('descriptions')
+    config.dictionary = db_handle.read_list('dictionary')
+    config.doc_items = db_handle.read_list('doc_items')
+    config.user_items = db_handle.read_list('user_items')
+
+
 if __name__ == '__main__':
-    temp = db_handle.read_list('descriptions')
-    if temp:
-        config.descriptions = temp['list']
+    # Initialize
+    init(True)
+    # Run App
     app.secret_key = '!afD345eW%##$'
     app.run(host="0.0.0.0", port=config.server_port, debug=True)
 

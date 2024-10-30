@@ -28,7 +28,7 @@ class Mongo:
         return ret
 
     def read_list(self, list_name):
-        return self.db[config.lists_col].find_one({'name': list_name}, {'_id': False})
+        return self.db[config.lists_col].find_one({'name': list_name}, {'_id': False})['list']
 
     def add_doc_to_sign(self, doc):
         for item in doc['items']:
