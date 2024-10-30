@@ -4,8 +4,7 @@ import os
 server_port = 8000
 
 # Mongo configs
-con_str = 'mongodb+srv://Logistics:FKi2qCQirV0GyVNx@logistics.9iukv.mongodb.net/?retryWrites=true&w=majority&appName=Logistics'
-# con_str = os.environ.get("MONGO_URI")
+con_str = os.environ.get("MONGO_URI")
 db = 'Logistics'
 users_col = 'users'
 docs_col = 'docs'

@@ -20,7 +20,7 @@ function scroll_to_row(text){
     var rows = document.querySelectorAll('#inv_tb th');
     for (r in rows){
         if (rows[r].innerHTML.indexOf(text) != -1){
-            rows[r].scrollIntoView({behavior: 'smooth'});
+            rows[r].scrollIntoView({behavior: 'smooth',block: 'center'});
             break;
         }
     }

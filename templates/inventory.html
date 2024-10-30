@@ -7,12 +7,13 @@
 </head>
 <body class="display-1">
 <table id="inv_tb" class="table text-center table-striped" style="margin-left:auto;margin-right:auto;">
-    <tr><td colspan="5"><input type="text" placeholder="חיפוש" onchange="scroll_to_row(this.value)"></td></tr>
+    <tr style="position:fixed"><td colspan="5"><input type="text" placeholder="חיפוש" onchange="scroll_to_row(this.value)"></td></tr>
+    <tr><td colspan="5">חיפוש</td></tr>
 {% set ns = namespace(last_id='') %}
 {% for doc in inv %}
     {% if doc.id!=ns.last_id %}
     <tr ondblclick="openNewWindow(location.href='/sign?return=&id={{doc.id}}');">
-        <th colspan="10">{{doc.last_name}} {{doc.name}} {{doc.id}}</th>
+        <th colspan="10">{{doc.last_name}} {{doc.name}} {{doc.id}}<button type="button" onclick="openNewWindow(location.href='/sign?return=&id={{doc.id}}');">זיכוי</button></th>
     </tr>
     <tr>
         {% for k in doc['items'][0] %}
