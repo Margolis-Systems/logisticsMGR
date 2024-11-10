@@ -40,6 +40,7 @@ def sign():
                 if request.form or 'id' in r_v:
                     r_f = dict(request.form)
                     if 'return' in r_v:
+                        print(r_f)
                         inventory.ret(r_f)
                         if 'id' in r_f:
                             data = db_handle.validate_user(r_f['id'])

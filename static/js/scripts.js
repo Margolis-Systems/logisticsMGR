@@ -44,3 +44,12 @@ function add_required(elem_id, cur_val){
         }
     }
 }
+
+function close(){
+    if(window.opener!==null){
+        window.close();
+    }
+    else{
+        window.location.replace("/");
+    }
+}

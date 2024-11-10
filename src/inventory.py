@@ -19,7 +19,9 @@ def sign(dic):
 
 
 def ret(dic):
-    for item in dic:
+    keys = list(dic.keys())
+    keys.sort(reverse=True)
+    for item in keys:
         q = item.split('|')
         if len(q) > 1 and dic[item]:
             date = q[0]

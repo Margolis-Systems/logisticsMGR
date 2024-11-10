@@ -2,7 +2,7 @@ from src import db_handler, config, sms_handler
 import csv
 
 db_handle = db_handler.Mongo()
-# sms = sms_handler.Sms()
+sms = sms_handler.Sms()
 
 def csv_to_mongo(csv_dir):
     with open(csv_dir, newline='', encoding='utf8') as csvfile:
@@ -17,4 +17,4 @@ def csv_to_mongo(csv_dir):
             dic['name'] = row[5].replace('*', "")
             dic['last_name'] = row[6]
             db_handle.create_user(dic)
-csv_to_mongo("C:\\Users\\MargoliSys\\Downloads\\מצבת כח אדם - גיליון1.csv")
+# csv_to_mongo("C:\\Users\\MargoliSys\\Downloads\\מצבת כח אדם - גיליון1.csv")
