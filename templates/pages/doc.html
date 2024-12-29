@@ -1,0 +1,15 @@
+{% include 'layout/search.html' %}
+{% for doc in data %}
+<tr>
+    <th colspan="5">{{doc.rank}} {{doc.name}} {{doc.last_name}} | {{doc.id}} | {{doc.phone}} | {{doc.department}}</th>
+</tr>
+{% for item in doc['items'] %}
+<tr>
+    <td>{{item['description']}}</td>
+    <td>{{item['quantity']}}</td>
+    <td>{{item['note']}}</td>
+    <td></td>
+    <td></td>
+</tr>
+{% endfor %}
+{% endfor %}

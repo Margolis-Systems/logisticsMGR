@@ -1,0 +1,16 @@
+<form method="POST" action="/login">
+    <tr>
+        <td colspan="10">
+            <label for="idinpt">מס אישי</label><input type="number" id="idinpt" name="id" placeholder="מס אישי" autofocus required>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="10">
+            <label for="phoneinpt">מס טלפון</label><input type="number" id="phoneinpt" name="phone" placeholder="מס טלפון" required>
+        </td>
+    </tr>
+    <tr>
+        <td><button class="btn btn-warning btn-lg">אישור</button></td>
+    </tr>
+    <tr><td colspan="10">{{data.msg}}</td></tr>
+</form>

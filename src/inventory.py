@@ -1,30 +1,51 @@
-from main import db_handle
+from main import db_handle, session
 from datetime import datetime
 
 
 def sign(dic):
-    db_handle.create_user(dic)
+    # db_handle.create_user(dic)  # todo: condition
     doc = {'date': datetime.now(), 'items': [], 'sign': False}
     for k in dic:
         if 'item' in k and dic[k]:
             # todo: 'cat'?
             doc['items'].append({'cat': '', 'description': dic[k], 'quantity': dic[k.replace('item', 'quantity')],
                                  'note': dic[k.replace('item', 'note')]})
-        elif k in ['id', 'name', 'last_name', 'department']:
+        elif k in ['id', 'name', 'last_name', 'department'] and 'storage' not in dic:
+            if 'from' not in doc:
+                user = db_handle.validate_user(session['username'], session['phone'])
+                del user['docs']
+                if 'token' in user:
+                    del user['token']
+                doc['from'] = user
             doc[k] = dic[k]
+        elif k in ['name', 'last_name', 'rank', 'department', 'phone'] and 'storage' in dic:
+            if 'from' not in doc:
+                doc['from'] = {}
+                storages = db_handle.read_list('storage')
+                for s in storages:
+                    if s['name'] == dic['storage']:
+                        doc.update(s)
+                        break
+            doc['from'][k] = dic[k]
     if doc['items']:
-        db_handle.add_doc_to_sign(doc)
-        return True
-    return False
+        print(doc)
+        db_handle.write_doc(doc)
+        for i in range(len(doc['items'])):
+            doc['items'][i]['quantity'] = int(doc['items'][i]['quantity'])
+            if 'storage' not in dic:
+                doc['items'][i]['quantity'] *= -1
+        db_handle.update_inv(doc['items'])
 
 
-def ret(dic):
-    keys = list(dic.keys())
-    keys.sort(reverse=True)
-    for item in keys:
-        q = item.split('|')
-        if len(q) > 1 and dic[item]:
-            date = q[0]
-            index = int(q[1])
-            quantity = int(dic[item])
-            db_handle.return_item(dic['id'],date , index, quantity)
+def ret(dic, storage=False):
+    for k in dic:
+        pid = dic['id']
+        if k == 'id':
+            continue
+        elif dic[k]:
+            date, description, idx = k.split('|')
+            qnt = int(dic[k])
+            db_handle.return_item(pid, date, int(idx), qnt)
+            if storage:
+                qnt *= -1
+            db_handle.update_inv([{'description': description, 'quantity': qnt}])

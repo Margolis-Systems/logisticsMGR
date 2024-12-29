@@ -1,5 +1,4 @@
 import datetime
-
 from pymongo import MongoClient
 from src import config
 
@@ -17,30 +16,29 @@ class Mongo:
         if new_dic:
             self.db[config.users_col].update_one({'id': dic['id']}, {'$set': new_dic}, upsert=True)
 
-    def validate_user(self, uid):
-        # todo: check cookie with secret
-        ret = self.db[config.users_col].find_one({'id': uid}, {'_id': False})
-        if ret:
-            ret = dict(ret)
-            ret['docs'] = list(self.db[config.docs_col].find({'id': uid}, {'_id': False}))
-        else:
-            ret = {}
-        return ret
+    def validate_user(self, uid, phone, admin=False):
+        query = {'id': uid, 'phone': phone, 'storage': {'$exists': False}}
+        if admin:
+            del query['phone']
+            del query['storage']
+        user = self.db[config.users_col].find_one(query, {'_id': False})
+        if user:
+            user = dict(user)
+            user['docs'] = list(self.db[config.docs_col].find({'id': uid}, {'_id': False}))
+            return user
+        return {}
 
     def read_list(self, list_name):
         return self.db[config.lists_col].find_one({'name': list_name}, {'_id': False})['list']
 
-    def add_doc_to_sign(self, doc):
-        for item in doc['items']:
-            if 'description' in item:
-                if item['description'] not in config.descriptions:
-                    config.descriptions.append(item['description'])
-                    self.db[config.lists_col].update_one({'name': 'descriptions'}, {'$push': {'list': item['description']}})
+    def write_doc(self, doc):
         self.db[config.docs_col].update_one({'id': doc['id'], 'date': doc['date']}, {'$set': doc}, upsert=True)
 
     def return_item(self, person_id, date, index, quantity):
         date = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S.%f')
         to_update = self.db[config.docs_col].find_one({'id': person_id, 'date': date})
+        if not to_update:
+            return
         if int(to_update['items'][index]['quantity']) <= quantity:
             del to_update['items'][index]
         else:
@@ -50,5 +48,32 @@ class Mongo:
         else:
             self.db[config.docs_col].delete_one({'id': person_id, 'date': date})
 
-    def all_inv(self, p_id=''):
-        return list(self.db[config.docs_col].find({}, {'_id': False}).sort([('department', 1), ('last_name', 1), ('name', 1)]))
+    def read_docs(self, query=None):
+        if not query:
+            query = {}
+        return list(self.db[config.docs_col].find(query, {'_id': False}).sort([('department', 1), ('last_name', 1),
+                                                                               ('name', 1)]))
+
+    def read_inv(self, query=None):
+        if not query:
+            query = {}
+        all_inv = list(self.db[config.storage_col].find(query, {'_id': False}))
+        inv = {}
+        for ai in all_inv:
+            for i in ai:
+                if i != 'id':
+                    if i not in inv:
+                        inv[i] = ai[i]
+                    else:
+                        inv += ai[i]
+        return inv
+
+    def update_inv(self, items):
+        print(items)
+        for i in items:
+            self.db[config.storage_col].update_one({},
+                                                   {'$inc': {i['description']: i['quantity']}}, upsert=True)
+
+
+
+

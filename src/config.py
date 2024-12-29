@@ -9,6 +9,7 @@ con_str = os.environ.get("MONGO_URI")
 db = 'Logistics'
 users_col = 'users'
 docs_col = 'docs'
+storage_col = 'storage'
 lists_col = 'lists'
 admin_department = 'לוגיסטיקה'
 

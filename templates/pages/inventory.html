@@ -1,0 +1,34 @@
+{% include 'layout/search.html' %}
+<tr><td colspan="5">-</td></tr>
+<tr>
+<th><button class="btn btn-warning btn-lg" disabled>יצוא</button> </th>
+<th colspan="10">מלאי נוכחי</th>
+</tr>
+<tr>
+    <th>שם פריט</th>
+    <th>כמות</th>
+    <th colspan="2"></th>
+</tr>
+{% for i in data['inv']['actual'] %}
+<tr>
+    <td>{{i}}</td>
+    <td>{{data['inv']['actual'][i]}}/{{data['inv']['total'][i]}}</td>
+    <td colspan="2"></td>
+</tr>
+{% endfor %}
+<tr>
+    <th colspan="10">מקור מלאי</th>
+</tr>
+{% for doc in data['docs'] %}
+<tr>
+    <th colspan="2">יחידה מספקת: {{doc['from']['name']}}</th>
+    <th colspan="2">{{doc['date']}} </th>
+</tr>
+{% for item in doc['items'] %}
+<tr>
+    <td>{{item['description']}}</td>
+    <td>{{item['quantity']}}</td>
+    <td colspan="2">{{item['note']}}</td>
+</tr>
+{% endfor %}
+{% endfor %}

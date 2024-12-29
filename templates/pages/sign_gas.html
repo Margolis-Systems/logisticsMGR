@@ -1,0 +1,47 @@
+<form method="POST" action="/sign_gas" autocomplete="off">
+    <tr>
+        <th colspan="5">החתמה על ציוד</th>
+    </tr>
+    <tr>
+        <td colspan="5"><input size="8" type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
+    </tr>
+    <tr>
+        <td colspan="5"><input size="8" name="name" id="name" placeholder="שם פרטי" required></td>
+    </tr>
+    <tr>
+        <td colspan="5"><input size="8" name="last_name" id="last_name" placeholder="שם משפחה" required></td>
+    </tr>
+    <tr>
+        <td colspan="5"><input size="8" name="rank" id="rank" placeholder="דרגה" required></td>
+    </tr>
+    <tr>
+        <td colspan="5"><input size="8" name="department" id="department" placeholder="מחלקה" required></td>
+    </tr>
+    <tr>
+        <td colspan="5"><input size="8" type="number" name="phone" id="phone" placeholder="טלפון" required></td>
+    </tr>
+    <tr>
+        <td colspan="5"><input size="8" type="number" name="car_plate" id="car_plate" placeholder="מס רכב"></td>
+    </tr>
+    <tr>
+        <th>כמות</th>
+        <th>סוג</th>
+        <th>סידורי התחלה</th>
+        <th>סידורי סוף</th>
+    </tr>
+        <td><input type="number" id="quantity" name="quantity" placeholder="כמות" required></td>
+        <td>
+            <select name="type" required>
+                <option style="display:none" value="" selected>בחר סוג</option>
+                <option value="benzene">בנזין</option>
+                <option value="diesel">סולר</option>
+            </select>
+        </td>
+        <td><input name="serial_s" id="serial_s" placeholder="סידורי התחלה" disabled></td>
+        <td><input name="serial_e" id="serial_e" placeholder="סידורי סוף" disabled></td>
+    </tr>
+    <tr><td>הוסף תמונה:</td><td colspan="5"><input type="file" accept="image/*" capture="camera">></td></tr>
+    <tr>
+        <td colspan="5"><button type="submit" class="btn btn-success btn-lg">אישור</button></td>
+    </tr>
+</form>

@@ -7,11 +7,12 @@ function get_info(person_id){
     var data
     $.getJSON('/get_info?id='+person_id, function(data) {
         $('#result').text(data);
-        for(k in data){
-            console.log(k, data[k])
-            elem = document.getElementById(k);
-            if (elem){
-                elem.value = data[k];
+        if (data){
+            for(k in data){
+                elem = document.getElementById(k);
+                if (elem){
+                    elem.value = data[k];
+                }
             }
         }
     });
@@ -33,11 +34,13 @@ function add_row(){
 }
 
 function add_required(elem_id, cur_val){
-    console.log(cur_val)
     element = document.getElementById(elem_id)
     if (element){
         if (cur_val){
             element.required = true;
+            element.setAttribute('max', items[cur_val])
+            element.setAttribute('min', 1)
+
         }
         else{
             element.required = false;

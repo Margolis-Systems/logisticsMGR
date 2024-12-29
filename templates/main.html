@@ -4,35 +4,22 @@
     <meta charset="UTF-8">
     <title>החתמת ציוד גדוד ניוד</title>
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
 </head>
 <body class="display-3">
-    <form method="POST">
-        <table class="table table-bordered table-striped text-center" style="margin-left:auto;margin-right:auto;">
-            <tr><td colspan="10"><img src="static/img/Pakar.svg.png" height="100"></td></tr>
-            {% if data %}
-                {% if data.department == page_data['department'] %}
-                {% include 'toolbar.html' %}
-                {% endif %}
-                {% if data.docs %}
-                {% include 'doc.html' %}
-                {% else %}
-            <tr>
-                <td colspan="10">לא נמצאו טפסים לחתימה</td>
-            </tr>
+    <table class="table table-bordered table-striped text-center" style="margin-left:auto;margin-right:auto;">
+        <tr><td colspan="10"><img src="static/img/Pakar.svg.png" height="100"></td></tr>
+        {% if user %}
+            {% include 'layout/toolbar.html' %}
+            {% if page %}
+            {% include page %}
             {% endif %}
-            {% else %}
-            <tr>
-                <td colspan="10">
-                    <label for="idinpt">מס אישי</label><input type="number" id="idinpt" name="id" placeholder="הזן מס אישי" autofocus>
-                </td>
-            </tr>
-            <tr><td colspan="10">{{msg}}</td></tr>
-            {% endif %}
-            {% if data %}
-            <tr><td colspan="5"><button class="btn btn-danger" type="button" onclick="location.href='/logout'">יציאה</button></td></tr>
-            {% endif %}
-        </table>
-    </form>
+        {% else %}
+            {% include '/pages/login.html' %}
+        {% endif %}
+    </table>
 </body>
 <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </html>

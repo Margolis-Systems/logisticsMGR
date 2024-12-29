@@ -1,0 +1,63 @@
+<form method="POST" action="/sign" autocomplete="off">
+    <tr>
+        <th colspan="5">החתמה מחסן</th>
+    </tr>
+    <tr>
+        <td colspan="5">
+            <select name="storage" id="storage" required>
+                <option style="display:none" value="" selected>בחר מחסן מקבל</option>
+                {% for s in data['storages'] %}
+                <option value="{{s['name']}}">{{s['name']}}</option>
+                {% endfor %}
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th colspan="5">פרטי יחידה מספקת</th>
+    </tr>
+    <tr>
+        <td colspan="5"><input size="8" type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
+    </tr>
+    <tr>
+        <td colspan="5"><input size="8" name="name" id="name" placeholder="שם פרטי" required></td>
+    </tr>
+    <tr>
+        <td colspan="5"><input size="8" name="last_name" id="last_name" placeholder="שם משפחה" required></td>
+    </tr>
+    <tr>
+        <td colspan="5"><input size="8" name="rank" id="rank" placeholder="דרגה" required></td>
+    </tr>
+    <tr>
+        <td colspan="5"><input size="8" name="department" id="department" placeholder="מחלקה" required></td>
+    </tr>
+    <tr>
+        <td colspan="5"><input size="8" type="number" name="phone" id="phone" placeholder="טלפון" required></td>
+    </tr>
+    <tr>
+        <th>שם</th>
+        <th>כמות</th>
+        <th>הערה</th>
+    </tr>
+    {% for i in range(30) %}
+    {% if i > 2 %}
+    <tr style="display:none;" id="row{{loop.index0}}">
+    {% else %}
+    <tr id="row{{loop.index0}}">
+    {% endif %}
+        <td>
+            <input size="8" name="item{{loop.index0}}" id="item{{loop.index0}}" onchange="add_required('quantity{{loop.index0}}', this.value)" placeholder="שם פריט" {% if loop.index0==0 %}required{% endif %}>
+
+        </td>
+        <td><input size="2" type="number" name="quantity{{loop.index0}}" id="quantity{{loop.index0}}" placeholder="כמות"></td>
+        <td><input size="10" name="note{{loop.index0}}" placeholder="הערה"></td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <td><button type="submit" class="btn btn-success btn-lg">אישור</button></td>
+        <td></td>
+        <td><button type="button" onclick="add_row()" class="btn btn-primary btn-lg">+שורה</button></td>
+    </tr>
+</form>
+<script>
+    var items = {{data|tojson|safe}}.items;
+</script>

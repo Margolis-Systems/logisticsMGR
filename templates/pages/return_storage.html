@@ -1,0 +1,18 @@
+<form method="POST" action="/ret_storage" autocomplete="off">
+    <tr>
+        <th colspan="5">זיכוי מחסן</th>
+    </tr>
+    {% if data.docs %}
+    <input type="hidden" name="id" value="{{data.docs[0].id}}">
+    {% for doc in data.docs %}
+    <tr><th>{{doc.name}}</th><th>יחידה מספקת : {{doc.from.name}}</th></tr>
+    {% for l in doc['items'] %}
+    <tr>
+        <td>{{l.description}}</td>
+        <td><input type="number" name="{{doc.date}}|{{l.description}}|{{loop.index0}}" min="1" max="{{l.quantity}}" placeholder="חתום על {{l.quantity}}"></td>
+    </tr>
+    {% endfor %}
+    {% endfor %}}
+    <tr><td colspan="5"><button class="btn btn-lg btn-success">אישור</button></td></tr>
+    {% endif %}
+</form>

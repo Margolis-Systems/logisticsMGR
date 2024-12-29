@@ -1,0 +1,47 @@
+<nav class="navbar navbar-expand-lg navbar-light d-print-none">
+    <a class="navbar-brand" href="#">תפריט</a>
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="\">ראשי</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" style="background-color: #e3f2fd;" href="\inv">רשימת ציוד</a>
+        </li>
+        {% if user['department'] == 'לוגיסטיקה' %}
+        <li class="nav-item">
+          <a class="nav-link" href="\inv?storage">מלאי מחסן</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" style="background-color: #e3f2fd;" href="\sign_storage">החתמת מחסן</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="\ret_storage">זיכוי מחסן</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" style="background-color: #e3f2fd;" href="\sign">החתמה על ציוד</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="\ret">זיכוי ציוד</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" style="background-color: #e3f2fd;" href="\sign_gas">חתימה כ. דלק</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="\ret_gas">זיכוי כ. דלק</a>
+        </li><!--
+        <li class="nav-item">
+          <a class="nav-link"  href="\drive">דיווח ק"מ</a>
+        </li>-->
+        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" style="background-color: #e3f2fd;" href="\logout">התנתק</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
