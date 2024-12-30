@@ -1,15 +1,16 @@
 {% include 'layout/search.html' %}
+<tr><th colspan="5">רשימת ציוד מוחתם</th></tr>
 {% for doc in data %}
 <tr>
+    <th><button type="button" onclick="location.href='/ret?id={{doc.id}}'">זיכוי</button></th>
     <th colspan="5">{{doc.rank}} {{doc.name}} {{doc.last_name}} | {{doc.id}} | {{doc.phone}} | {{doc.department}}</th>
 </tr>
+<tr><th>פריט</th><th>כמות</th><th>הערה</th></tr>
 {% for item in doc['items'] %}
 <tr>
     <td>{{item['description']}}</td>
     <td>{{item['quantity']}}</td>
-    <td>{{item['note']}}</td>
-    <td></td>
-    <td></td>
+    <td colspan="2">{{item['note']}}</td>
 </tr>
 {% endfor %}
 {% endfor %}

@@ -28,11 +28,15 @@ class Mongo:
             return user
         return {}
 
+    def all_users(self):
+        return list(self.db[config.users_col].find({}, {'_id': False}).sort([('department', 1), ('last_name', 1),
+                                                                               ('name', 1)]))
+
     def read_list(self, list_name):
         return self.db[config.lists_col].find_one({'name': list_name}, {'_id': False})['list']
 
-    def write_doc(self, doc):
-        self.db[config.docs_col].update_one({'id': doc['id'], 'date': doc['date']}, {'$set': doc}, upsert=True)
+    def write_doc(self, doc, col=config.docs_col):
+        self.db[col].update_one({'id': doc['id'], 'date': doc['date']}, {'$set': doc}, upsert=True)
 
     def return_item(self, person_id, date, index, quantity):
         date = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S.%f')
@@ -48,10 +52,10 @@ class Mongo:
         else:
             self.db[config.docs_col].delete_one({'id': person_id, 'date': date})
 
-    def read_docs(self, query=None):
+    def read_docs(self, query=None, col=config.docs_col):
         if not query:
             query = {}
-        return list(self.db[config.docs_col].find(query, {'_id': False}).sort([('department', 1), ('last_name', 1),
+        return list(self.db[col].find(query, {'_id': False}).sort([('department', 1), ('last_name', 1),
                                                                                ('name', 1)]))
 
     def read_inv(self, query=None):
@@ -69,7 +73,6 @@ class Mongo:
         return inv
 
     def update_inv(self, items):
-        print(items)
         for i in items:
             self.db[config.storage_col].update_one({},
                                                    {'$inc': {i['description']: i['quantity']}}, upsert=True)

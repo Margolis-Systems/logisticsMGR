@@ -1,1 +1,13 @@
-input{width:400px};
+.sign_inpt{
+    width:300px!important;
+    background-color:#DAF7A6;
+    }
+
+.gsign_inpt{
+    width:200px!important;
+    background-color:#DAF7A6;
+    }
+
+.file_btn{
+    width:60%;
+    }

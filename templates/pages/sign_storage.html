@@ -1,6 +1,6 @@
 <form method="POST" action="/sign" autocomplete="off">
     <tr>
-        <th colspan="5">החתמה מחסן</th>
+        <th colspan="5">החתמת מחסן</th>
     </tr>
     <tr>
         <td colspan="5">
@@ -16,22 +16,20 @@
         <th colspan="5">פרטי יחידה מספקת</th>
     </tr>
     <tr>
-        <td colspan="5"><input size="8" type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
+        <td colspan="5"><input class="sign_inpt" size="8" type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
     </tr>
     <tr>
-        <td colspan="5"><input size="8" name="name" id="name" placeholder="שם פרטי" required></td>
+        <td colspan="2"><input class="sign_inpt" size="8" name="name" id="name" placeholder="שם פרטי" required></td>
+        <td colspan="5"><input class="sign_inpt" size="8" name="last_name" id="last_name" placeholder="שם משפחה" required></td>
     </tr>
     <tr>
-        <td colspan="5"><input size="8" name="last_name" id="last_name" placeholder="שם משפחה" required></td>
+        <td colspan="2"><input class="sign_inpt" size="8" name="department" id="department" placeholder="מחלקה" required></td>
+        <td colspan="5"><input class="sign_inpt" size="8" name="rank" id="rank" placeholder="דרגה" required></td>
     </tr>
     <tr>
-        <td colspan="5"><input size="8" name="rank" id="rank" placeholder="דרגה" required></td>
-    </tr>
-    <tr>
-        <td colspan="5"><input size="8" name="department" id="department" placeholder="מחלקה" required></td>
-    </tr>
-    <tr>
-        <td colspan="5"><input size="8" type="number" name="phone" id="phone" placeholder="טלפון" required></td>
+        <td colspan="2"><input class="sign_inpt" size="8" type="number" name="phone" id="phone" placeholder="טלפון" required></td>
+        <td colspan="5"><input class="sign_inpt" size="8" type="number" name="car_plate" id="car_plate" placeholder="מס רכב"></td>
+        <td></td>
     </tr>
     <tr>
         <th>שם</th>
@@ -45,11 +43,10 @@
     <tr id="row{{loop.index0}}">
     {% endif %}
         <td>
-            <input size="8" name="item{{loop.index0}}" id="item{{loop.index0}}" onchange="add_required('quantity{{loop.index0}}', this.value)" placeholder="שם פריט" {% if loop.index0==0 %}required{% endif %}>
-
+            <input class="sign_inpt" size="8" name="item{{loop.index0}}" id="item{{loop.index0}}" onchange="add_required('quantity{{loop.index0}}', this.value)" placeholder="שם פריט" {% if loop.index0==0 %}required{% endif %}>
         </td>
-        <td><input size="2" type="number" name="quantity{{loop.index0}}" id="quantity{{loop.index0}}" placeholder="כמות"></td>
-        <td><input size="10" name="note{{loop.index0}}" placeholder="הערה"></td>
+        <td><input class="sign_inpt" size="2" type="number" name="quantity{{loop.index0}}" id="quantity{{loop.index0}}" placeholder="כמות"></td>
+        <td><input class="sign_inpt" size="10" name="note{{loop.index0}}" placeholder="הערה"></td>
     </tr>
     {% endfor %}
     <tr>

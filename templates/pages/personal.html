@@ -1,0 +1,26 @@
+{% extends 'layout/layout.html' %}
+{% block body %}
+<tr>
+    <th>שם מלא</th>
+    <th>מ.א.</th>
+    <th>פעולות</th>
+</tr>
+{% for u in users %}
+<tr>
+    <td>{{u.name}} {{u.last_name}}</td>
+    <td>{{u.id}}</td>
+    <td>
+        <div class="dropdown">
+            <button class="btn btn-primary btn-lg dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            פעולות
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+        </div>
+    </td>
+</tr>
+{% endfor %}
+{% endblock %}

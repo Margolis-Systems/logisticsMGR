@@ -3,21 +3,28 @@
 {% if data.docs %}
     <tr><td colspan="5">{{data.docs[0].id}} {{data.docs[0].name}} {{data.docs[0].last_name}}</td></tr>
     <input type="hidden" name="id" value="{{data.docs[0].id}}">
+    <tr>
+        <th>פריט</th>
+        <th>כמות חתום</th>
+        <th>כמות זיכוי</th>
+    </tr>
     {% for doc in data.docs %}
     {% for l in doc['items'] %}
     <tr>
         <td>{{l.description}}</td>
-        <td><input type="number" name="{{doc.date}}|{{l.description}}|{{loop.index0}}" min="1" max="{{l.quantity}}" placeholder="חתום על {{l.quantity}}"></td>
+        <td>{{l.quantity}}</td>
+        <td><input class="gsign_inpt" type="number" name="{{doc.date}}|{{l.description}}|{{loop.index0}}" min="1" max="{{l.quantity}}" placeholder="זיכוי"></td>
     </tr>
     {% endfor %}
     {% endfor %}
     <tr>
         <td><button type="submit" class="btn btn-lg btn-success">אישור</button> </td>
-        <td><button type="button" class="btn btn-lg btn-danger" onclick="location.href='/ret'">חזור</button> </td>
+        <td></td>
+        <td><button type="button" class="btn btn-lg btn-danger" onclick="history.back()">חזור</button> </td>
     </tr>
 {% else %}
     <tr><th>הזן מס אישי</th></tr>
-    <tr><td><input name="id" id="id" placeholder="מס אישי" required></td></tr>
+    <tr><td><input type="number" class="sign_inpt" name="id" id="id" placeholder="מס אישי" required></td></tr>
     {% if data.msg %}
     <tr><td colspan="5"><label style="color:red;">{{data.msg}}</label></td></tr>
     {% endif %}

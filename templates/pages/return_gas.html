@@ -1,0 +1,27 @@
+<tr><th colspan="5">זיכוי כ. דלק</th></tr>
+<form method="POST">
+{% if data.docs %}
+    <tr><td colspan="5">{{data.docs[0].id}} {{data.docs[0].name}} {{data.docs[0].last_name}}</td></tr>
+    <input type="hidden" name="id" value="{{data.docs[0].id}}">
+    {% for doc in data.docs %}
+    {% for l in doc['items'] %}
+    <tr>
+        <td>{{l.type}}</td>
+        <td>{{l.serial}}</td>
+        <td><input class="form-check-input" type="checkbox" name="{{doc.date}}|{{l.type}}|{{l.serial}}"></td>
+    </tr>
+    {% endfor %}
+    {% endfor %}
+    <tr>
+        <td><button type="submit" class="btn btn-lg btn-success">אישור</button> </td>
+        <td></td>
+        <td><button type="button" class="btn btn-lg btn-danger" onclick="history.back()'">חזור</button> </td>
+    </tr>
+{% else %}
+    <tr><th>הזן מס אישי</th></tr>
+    <tr><td><input name="id" id="id" placeholder="מס אישי" required></td></tr>
+    {% if data.msg %}
+    <tr><td colspan="5"><label style="color:red;">{{data.msg}}</label></td></tr>
+    {% endif %}
+{% endif %}
+</form>

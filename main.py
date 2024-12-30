@@ -81,7 +81,10 @@ def sign():
         if user:
             if request.form:
                 rf = dict(request.form)
-                inventory.sign(rf)
+                inventory.sign(rf, user)
+                msg = 'פיקוד העורף - גדוד ניוד\nהוחתמת על ציוד באופן דיגיטלי.\nלצפיה, יש להכנס בקישור המצורף:\n\n{}'.format(
+                    str(request.host_url))
+                sms.send_sms(msg, [rf['phone']])
                 return redirect('/sign')
             items = {}
             if user['department'] == config.admin_department:
@@ -104,8 +107,10 @@ def ret():
         if user:
             docs = {}
             msg = ''
-            if request.form:
-                rf = dict(request.form)
+            rf = dict(request.form)
+            if not rf and request.values:
+                rf = dict(request.values)
+            if rf:
                 if len(rf.keys()) > 1:
                     inventory.ret(rf)
                     return redirect('/ret')
@@ -153,7 +158,12 @@ def sign_gas():
         user = db_handle.validate_user(session['username'], session['phone'])
         if user:
             if request.form:
-                gas.sign(dict(request.form))
+                photo = None
+                if 'file' in request.files:
+                    if request.files['file']:
+                        photo = request.files['file']
+                gas.sign(dict(request.form), photo)
+                print(request.files)
                 return redirect('/sign_gas')
             return main_page(page='pages/sign_gas.html')
     return redirect('/')
@@ -164,11 +174,22 @@ def ret_gas():
     if 'username' in session and 'phone' in session:
         user = db_handle.validate_user(session['username'], session['phone'])
         if user:
-            if request.form:
-                gas.ret(dict(request.form))
-                return redirect('/ret_gas')
-
-            return main_page(page='pages/return_gas.html')
+            docs = {}
+            msg = ''
+            rf = dict(request.form)
+            if not rf and request.values:
+                rf = dict(request.values)
+            if rf:
+                if len(rf.keys()) > 1:
+                    gas.ret(dict(request.form))
+                    return redirect('/ret_gas')
+                elif 'id' in rf:
+                    docs = db_handle.read_docs({'id': rf['id']}, 'gas')
+                    if not docs:
+                        msg = 'לא נמצאו טפסים'
+                else:
+                    docs['msg'] = 'ERROR'
+            return main_page(page='pages/return_gas.html', data={'docs': docs, 'msg': msg})
     return redirect('/')
 
 
@@ -186,6 +207,16 @@ def init(force=False):
     config.dictionary = db_handle.read_list('dictionary')
     config.doc_items = db_handle.read_list('doc_items')
     config.user_items = db_handle.read_list('user_items')
+
+
+@app.route('/personal')
+def personal():
+    if 'username' in session and 'phone' in session:
+        user = db_handle.validate_user(session['username'], session['phone'])
+        if user:
+            all_users = db_handle.all_users()
+            return render_template('pages/personal.html', users=all_users, user=user)
+    return redirect('/')
 
 
 if __name__ == '__main__':

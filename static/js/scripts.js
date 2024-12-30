@@ -5,14 +5,21 @@ const openNewWindow = (editorUrl) => {
 
 function get_info(person_id){
     var data
+    trig = true
     $.getJSON('/get_info?id='+person_id, function(data) {
         $('#result').text(data);
-        if (data){
-            for(k in data){
-                elem = document.getElementById(k);
-                if (elem){
-                    elem.value = data[k];
-                }
+        for(k in data){
+            trig = false;
+            elem = document.getElementById(k);
+            if (elem){
+                elem.value = data[k];
+            }
+        }
+        if (trig){
+            if (confirm("לא נמצא במערכת\nלהוסיף חדש?")) {
+                document.getElementById('add_new').value = 'true';
+            } else {
+              document.getElementById('add_new').value = 'false';
             }
         }
     });
@@ -36,14 +43,15 @@ function add_row(){
 function add_required(elem_id, cur_val){
     element = document.getElementById(elem_id)
     if (element){
-        if (cur_val){
+        if (items.hasOwnProperty(cur_val)){
             element.required = true;
             element.setAttribute('max', items[cur_val])
             element.setAttribute('min', 1)
 
         }
         else{
-            element.required = false;
+            console.log(!cur_val);
+            window.alert('פריט לא נמצא במלאי')
         }
     }
 }
@@ -54,5 +62,16 @@ function close(){
     }
     else{
         window.location.replace("/");
+    }
+}
+
+function  gas_qnty(){
+    start_s = document.getElementById('serial_s').value;
+    end_s = document.getElementById('serial_e').value;
+    length = end_s.length;
+    if (start_s && end_s){
+        if (start_s.length < end_s.length){length = start_s.length}
+        qnt = parseInt(end_s.substring(0,length)) - parseInt(start_s.substring(0,length)) + 1;
+        document.getElementById('quantity').value = qnt;
     }
 }

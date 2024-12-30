@@ -1,5 +1,5 @@
 {% include 'layout/search.html' %}
-<tr><td colspan="5">-</td></tr>
+<tr><th colspan="5">מלאי מחסן</th></tr>
 <tr>
 <th><button class="btn btn-warning btn-lg" disabled>יצוא</button> </th>
 <th colspan="10">מלאי נוכחי</th>
@@ -21,8 +21,8 @@
 </tr>
 {% for doc in data['docs'] %}
 <tr>
-    <th colspan="2">יחידה מספקת: {{doc['from']['name']}}</th>
-    <th colspan="2">{{doc['date']}} </th>
+    <th colspan="3"><button type="button" onclick="location.href='/ret_storage'">זיכוי</button>יחידה מספקת: {{doc['from']['name']}}</th>
+    <th>{{doc['date'].strftime('%d-%m-%Y %H:%M')}} </th>
 </tr>
 {% for item in doc['items'] %}
 <tr>
