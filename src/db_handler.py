@@ -38,6 +38,9 @@ class Mongo:
     def write_doc(self, doc, col=config.docs_col):
         self.db[col].update_one({'id': doc['id'], 'date': doc['date']}, {'$set': doc}, upsert=True)
 
+    def sign_docs(self, uid):
+        self.db[config.docs_col].update_many({'id': uid}, {'$set': {'sign': True}}, upsert=True)
+
     def return_item(self, person_id, date, index, quantity):
         date = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S.%f')
         to_update = self.db[config.docs_col].find_one({'id': person_id, 'date': date})

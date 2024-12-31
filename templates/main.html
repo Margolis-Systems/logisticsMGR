@@ -9,11 +9,37 @@
 <body class="display-3">
     <table class="table table-bordered table-striped text-center" style="margin-left:auto;margin-right:auto;">
         <tr><td colspan="10"><img src="static/img/Pakar.svg.png" height="100"></td></tr>
+        {% set sign=false %}
         {% if user %}
             {% include 'layout/toolbar.html' %}
             {% if page %}
             {% include page %}
             {% endif %}
+        <tr>
+            <th>פריט</th>
+            <th>כמות</th>
+            <th>הערה</th>
+        </tr>
+            {% for doc in user.docs %}
+            {% if doc['sign'] == false %}
+            {% set sign=true %}
+        {% endif %}
+            {% for item in doc['items'] %}
+            <tr>
+                <td>{{item.description}}</td>
+                <td>{{item.quantity}}</td>
+                <td>{{item.note}}</td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+        {% if sign %}
+        <form method="POST" id="main_form">
+            <input type="hidden" name="sign" value="true">
+        </form>
+        <tr><td colspan="5"><button type="button" onclick="sign_doc()" class="btn btn-lg btn-success">חתימה</button> </td></tr>
+        {% else %}
+        <tr><th colspan="5">מאושר</th></tr>
+        {% endif %}
         {% else %}
             {% include '/pages/login.html' %}
         {% endif %}

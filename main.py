@@ -12,6 +12,11 @@ app = Flask('Logistics')
 def main_page(page='', data=None):
     if 'username' in session and 'phone' in session:
         user = db_handle.validate_user(session['username'], session['phone'])
+        if request.form:
+            rf = dict(request.form)
+            if 'sign' in rf:
+                if rf['sign'] == 'true':
+                    db_handle.sign_docs(session['username'])
     else:
         user = {}
         page = ''
@@ -24,10 +29,8 @@ def login():
     if request.form:
         # todo: second step token from sms
         req = dict(request.form)
-        print(req)
         if 'id' in req and 'phone' in req:
             user = db_handle.validate_user(req['id'], req['phone'])
-            print(user)
             session['username'] = req['id']
             session['phone'] = req['phone']
             # session['pass'] = secrets.token_urlsafe(16)
@@ -163,7 +166,6 @@ def sign_gas():
                     if request.files['file']:
                         photo = request.files['file']
                 gas.sign(dict(request.form), photo)
-                print(request.files)
                 return redirect('/sign_gas')
             return main_page(page='pages/sign_gas.html')
     return redirect('/')

@@ -75,3 +75,9 @@ function  gas_qnty(){
         document.getElementById('quantity').value = qnt;
     }
 }
+
+function sign_doc(){
+    if (confirm("מאשר שעברתי על רשימת הציוד שהתקבל")) {
+        document.getElementById('main_form').submit();
+    }
+}
