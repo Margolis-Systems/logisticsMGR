@@ -12,11 +12,16 @@ app = Flask('Logistics')
 def main_page(page='', data=None):
     if 'username' in session and 'phone' in session:
         user = db_handle.validate_user(session['username'], session['phone'])
+        s = db_handle.read_docs({'id': user['id'], 'sign': False})
+        if s:
+            s = True
+        user['sign'] = s
         if request.form:
             rf = dict(request.form)
             if 'sign' in rf:
                 if rf['sign'] == 'true':
                     db_handle.sign_docs(session['username'])
+                    return redirect('/')
     else:
         user = {}
         page = ''
