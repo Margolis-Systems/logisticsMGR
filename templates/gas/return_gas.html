@@ -1,3 +1,5 @@
+{% extends 'layout/layout.html' %}
+{% block body %}
 <tr><th colspan="5">זיכוי כ. דלק</th></tr>
 <form method="POST">
 {% if data.docs %}
@@ -18,10 +20,21 @@
         <td><button type="button" class="btn btn-lg btn-danger" onclick="history.back()'">חזור</button> </td>
     </tr>
 {% else %}
-    <tr><th>הזן מס אישי</th></tr>
-    <tr><td><input name="id" id="id" placeholder="מס אישי" required></td></tr>
+    <tr><th>בחר מרשימה</th><th>הזן מס אישי</th></tr>
+    <tr>
+        <td>
+            <select class="sign_inpt" name="full_name" id="full_name" onchange="update_id(this.value)">
+                <option style="display:none" value="" selected>בחר חייל</option>
+                {% for u in users %}
+                <option value="{{u.id}}">{{u.name}} {{u.last_name}}</option>
+                {% endfor %}
+            </select>
+        </td>
+        <td colspan="5"><input class="sign_inpt" size="8" type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
+    </tr>
     {% if data.msg %}
     <tr><td colspan="5"><label style="color:red;">{{data.msg}}</label></td></tr>
     {% endif %}
 {% endif %}
 </form>
+{% endblock %}

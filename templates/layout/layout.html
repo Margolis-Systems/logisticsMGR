@@ -9,13 +9,15 @@
 <body class="display-3">
     <table class="table table-bordered table-striped text-center" style="margin-left:auto;margin-right:auto;">
         <tr><td colspan="10"><img src="static/img/Pakar.svg.png" height="100"></td></tr>
+        {% if user %}
         {% include 'layout/toolbar.html' %}
+        {% endif %}
         {% block body %}
         {% endblock %}
     </table>
 </body>
-<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
 </html>

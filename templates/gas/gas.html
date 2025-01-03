@@ -1,0 +1,28 @@
+{% extends 'layout/layout.html' %}
+{% block body %}
+{% include 'layout/search.html' %}
+<tr><th colspan="5">רשימת מלאי דלק</th></tr>
+{% set ns = namespace(pid="")%}
+<tr><th>סוג</th><th>ליטרים</th><th>כמות</th></tr>
+{% for item in gas_store %}
+{% set ns.pid='q' %}
+{% for liter in gas_store[item] %}
+<tr><td>{{item}}</td><td>{{liter}}</td><td>{{gas_store[item][liter]['quantity']}}</td></tr>
+{% endfor %}
+{% endfor %}
+<tr>
+    <td><button class="btn btn-success btn-lg">חתימה למחסן</button></td>
+    <td colspan="2"><button class="btn btn-danger btn-lg">זיכוי מחסן</button></td>
+</tr>
+{% for doc in docs %}
+{% for k in doc %}
+{% if k not in ['id', 'ids', 'name', 'last_name'] %}
+{% for l in doc[k] %}
+<tr>
+    <td><button>זיכוי</button> {{doc['name']}} {{doc['last_name']}}</td><td>{{k}} {{l}}</td><td>{{doc[k][l]['quantity']}}</td>
+</tr>
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endblock %}

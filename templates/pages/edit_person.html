@@ -1,10 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'layout/layout.html' %}
+{% block body %}
+<tr><th colspan="5">פעולות: {{users.name}} {{users.last_name}}</th></tr>
+<tr>
+    <td colspan="2">עריכה:</td>
+    <td colspan="5"><input class="sign_inpt" size="8" type="number" name="id" id="id" placeholder="מספר אישי" value="{{users.id}}" required autofocus></td>
+</tr>
+<tr>
+    <td colspan="2"><input class="sign_inpt" size="8" name="name" id="name" placeholder="שם פרטי" value="{{users.name}}" required></td>
+    <td colspan="5"><input class="sign_inpt" size="8" name="last_name" id="last_name" placeholder="שם משפחה" value="{{users.last_name}}" required></td>
+</tr>
+<tr>
+    <td colspan="2"><input class="sign_inpt" size="8" name="department" id="department" placeholder="מחלקה" value="{{users.department}}" required></td>
+    <td colspan="5"><input class="sign_inpt" size="8" name="rank" id="rank" placeholder="דרגה" value="{{users.rank}}" required></td>
+</tr>
+<tr>
+    <td colspan="2"><input class="sign_inpt" size="8" type="number" name="phone" id="phone" placeholder="טלפון" value="{{users.phone}}" required></td>
+    <td colspan="5"><input class="sign_inpt" size="8" type="number" name="car_plate" id="car_plate" value="{{users.car_plate}}" placeholder="מס רכב"></td>
+    <td></td>
+</tr>
+<tr><th>ציוד</th><th colspan="2">דלק</th></tr>
+<tr>
+    <td><button class="btn btn-lg btn-success" style="width:300px;height:200px;" onclick="location.href='/sign?id={{users.id}}'">החתמת ציוד</button></td>
+    <td colspan="2"><button class="btn btn-lg btn-success" style="width:300px;height:200px;" onclick="location.href='/sign_gas?id={{users.id}}'">החתמת דלק</button></td>
+</tr>
+<tr>
+    <td><button class="btn btn-lg btn-danger" style="width:300px;height:200px;" onclick="location.href='/ret?id={{users.id}}'">זיכוי ציוד</button></td>
+    <td colspan="2"><button class="btn btn-lg btn-danger" style="width:300px;height:200px;" onclick="location.href='/ret_gas?id={{users.id}}'">זיכוי דלק</button></td>
+</tr>
+{% endblock %}

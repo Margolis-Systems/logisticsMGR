@@ -16,10 +16,14 @@ function get_info(person_id){
             }
         }
         if (trig){
-            if (confirm("לא נמצא במערכת\nלהוסיף חדש?")) {
-                document.getElementById('add_new').value = 'true';
-            } else {
-              document.getElementById('add_new').value = 'false';
+            an = document.getElementById('add_new');
+            if (an){
+                if (confirm("לא נמצא במערכת\nלהוסיף חדש?")) {
+                    an.value = 'true';
+                }
+                else {
+                  an.value = 'false';
+                }
             }
         }
     });
@@ -43,15 +47,15 @@ function add_row(){
 function add_required(elem_id, cur_val){
     element = document.getElementById(elem_id)
     if (element){
-        if (items.hasOwnProperty(cur_val)){
-            element.required = true;
-            element.setAttribute('max', items[cur_val])
-            element.setAttribute('min', 1)
-
-        }
-        else{
-            console.log(!cur_val);
-            window.alert('פריט לא נמצא במלאי')
+        element.required = true;
+        if (items){
+            if (items.hasOwnProperty(cur_val)){
+                element.setAttribute('max', items[cur_val])
+                element.setAttribute('min', 1)
+            }
+            else{
+                window.alert('פריט לא נמצא במלאי')
+            }
         }
     }
 }
@@ -79,5 +83,16 @@ function  gas_qnty(){
 function sign_doc(){
     if (confirm("מאשר שעברתי על רשימת הציוד שהתקבל")) {
         document.getElementById('main_form').submit();
+    }
+}
+
+if (typeof pid !== 'undefined'){
+    get_info(pid);
+}
+
+function update_id(pid){
+    if (pid){
+        document.getElementById('id').value = pid;
+        get_info(pid);
     }
 }

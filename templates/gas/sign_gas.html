@@ -1,0 +1,55 @@
+{% extends 'layout/layout.html' %}
+{% block body %}
+<form method="POST" action="/sign_gas" autocomplete="off" enctype="multipart/form-data">
+    <input type="hidden" name="add_new" id="add_new" value="false">
+    <tr>
+        <th colspan="5">החתמה כ. דלק</th>
+    </tr>
+    <tr>
+        <th colspan="5">פרטי המקבל</th>
+    </tr>
+    <tr>
+        <td colspan="2"><input class="sign_inpt" size="8" type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
+        <td colspan="2">
+            {% include 'layout/fulname_autocomplete.html' %}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2"><input class="sign_inpt" size="8" name="name" id="name" placeholder="שם פרטי" required></td>
+        <td colspan="2"><input class="sign_inpt" size="8" name="last_name" id="last_name" placeholder="שם משפחה"></td>
+    </tr>
+    <tr>
+        <td colspan="5"><input class="sign_inpt" type="number" min="1" id="km" name="km" placeholder="ק''מ רכב"></td>
+    </tr>
+    <tr>
+        <th colspan="5">פרטי הכרטיסים</th>
+    </tr>
+    <tr>
+        <td>
+            <select class="sign_inpt" name="type" required>
+                <option style="display:none" value="" selected>בחר סוג</option>
+                <option value="בנזין">בנזין</option>
+                <option value="סולר">סולר</option>
+            </select>
+        </td>
+        <td>
+            <select class="gsign_inpt" id="liter" name="liter" required>
+                <option style="display:none;" value="" selected>ליטרים</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+            </select>
+        </td>
+        <td>
+            <input class="gsign_inpt" type="number" min="1" id="quantity" name="quantity" placeholder="כמות" required>
+        </td>
+        <td>
+            <input class="gsign_inpt" type="number" id="serial" name="quantity" placeholder="סידורי">
+        </td>
+    </tr>
+    <tr><td colspan="5"><input style="display:none;" type="file" name="file" id="camera" accept="image/*" capture="camera"><button class="camera_btn" type="button" onclick="camera.click()"></button></td></tr>
+    <tr>
+        <td colspan="5"><button type="submit" class="btn btn-success btn-lg">אישור</button></td>
+    </tr>
+</form>
+{% endblock %}

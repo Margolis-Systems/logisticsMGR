@@ -1,0 +1,17 @@
+<input class="search_inpt" name="full_name" list="full_name" onchange="update_id(this.value)" placeholder="חיפוש שם">
+    <datalist id="full_name">
+        {% set ns = namespace(department="~")%}
+        {% for u in users %}
+        {% if ns.department != u.department %}
+        {% if ns.department != "~" %}
+        </optgroup>
+        {% endif %}
+        <optgroup label="{{u.department}}">
+        {% endif %}
+        {% set ns.department = u.department %}
+            <option value="{{u.id}}">{{u.name}} {{u.last_name}}</option>
+        {% if loop.index == users|length %}
+        </optgroup>
+        {% endif %}
+        {% endfor %}
+    </datalist>

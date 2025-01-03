@@ -9,7 +9,7 @@ app = Flask('Logistics')
 
 
 @app.route('/', methods=['POST', 'GET'])
-def main_page(page='', data=None):
+def main_page():
     if 'username' in session and 'phone' in session:
         user = db_handle.validate_user(session['username'], session['phone'])
         s = db_handle.read_docs({'id': user['id'], 'sign': False})
@@ -23,14 +23,13 @@ def main_page(page='', data=None):
                     db_handle.sign_docs(session['username'])
                     return redirect('/')
     else:
-        user = {}
-        page = ''
-        data = None
-    return render_template('main.html', data=data, user=user, page=page)
+        return redirect('/login')
+    return render_template('main.html', user=user)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    msg = ''
     if request.form:
         # todo: second step token from sms
         req = dict(request.form)
@@ -41,7 +40,9 @@ def login():
             # session['pass'] = secrets.token_urlsafe(16)
             if user:
                 return redirect('/')
-    return main_page(data={'msg': 'לא נמצאו תוצאות'})
+            else:
+                msg = 'לא נמצאו תוצאות'
+    return render_template('pages/login.html', data={'msg':msg})
 
 
 @app.route('/logout')
@@ -76,9 +77,9 @@ def inv():
                                 all_inv['total'][item['description']] = int(item['quantity'])
                             else:
                                 all_inv['total'][item['description']] += int(item['quantity'])
-                    return main_page(page='pages/inventory.html', data={'inv': all_inv, 'docs': docs})
+                    return render_template('pages/inventory.html', user=user, data={'inv': all_inv, 'docs': docs})
                 docs = db_handle.read_docs({'storage': {'$exists': False}})
-                return main_page(page='pages/doc.html', data=docs)
+                return render_template('pages/doc.html', user=user, data=docs)
     return redirect('/')
 
 
@@ -87,6 +88,7 @@ def sign():
     if 'username' in session and 'phone' in session:
         user = db_handle.validate_user(session['username'], session['phone'])
         if user:
+            pid = ''
             if request.form:
                 rf = dict(request.form)
                 inventory.sign(rf, user)
@@ -94,6 +96,9 @@ def sign():
                     str(request.host_url))
                 sms.send_sms(msg, [rf['phone']])
                 return redirect('/sign')
+            elif request.values:
+                if 'id' in request.values:
+                    pid = request.values['id']
             items = {}
             if user['department'] == config.admin_department:
                 items = db_handle.read_inv()
@@ -104,7 +109,7 @@ def sign():
                             items[i['description']] = i['quantity']
                         else:
                             items[i['description']] += i['quantity']
-            return main_page(page='pages/sign.html', data={'items': items})
+            return render_template('pages/sign.html', user=user, data={'items': items, 'id': pid}, users=db_handle.all_users())
     return redirect('/')
 
 
@@ -121,14 +126,13 @@ def ret():
             if rf:
                 if len(rf.keys()) > 1:
                     inventory.ret(rf)
-                    return redirect('/ret')
-                elif 'id' in rf:
+                if 'id' in rf:
                     docs = db_handle.read_docs({'id': rf['id']})
                     if not docs:
-                        msg = 'לא נמצאו טפסים'
+                        msg = 'לא נמצאו טפסים עבור {}'.format(rf['id'])
                 else:
                     docs['msg'] = 'ERROR'
-            return main_page(page='pages/return.html', data={'docs': docs, 'msg': msg})
+            return render_template('pages/return.html', user=user, data={'docs': docs, 'msg': msg})
     return redirect('/')
 
 
@@ -143,7 +147,7 @@ def sign_storage():
                 inventory.sign(rf)
                 return redirect('/sign_storage')
             storages = db_handle.read_list('storage')
-            return main_page(page='pages/sign_storage.html', data={'storages': storages})
+            return render_template('pages/sign_storage.html', user=user, data={'storages': storages})
     return redirect('/')
 
 
@@ -156,7 +160,30 @@ def ret_storage():
             if request.form:
                 inventory.ret(dict(request.form), storage=True)
                 return redirect('/ret_storage')
-            return main_page(page='pages/return_storage.html', data={'docs': docs})
+            return render_template('pages/return_storage.html', user=user, data={'docs': docs})
+    return redirect('/')
+
+
+@app.route('/gas', methods=['POST', 'GET'])
+def gas_main():
+    if 'username' in session and 'phone' in session:
+        user = db_handle.validate_user(session['username'], session['phone'])
+        if user:
+            if user['department'] == 'לוגיסטיקה':
+                gas_store = db_handle.read_docs({'storage': True}, col='gas')
+                docs = db_handle.read_docs({'storage': {'$exists': False}}, col='gas')
+                if gas_store:
+                    gas_store = gas_store[0]
+                    del gas_store['storage']
+                if request.form:
+                    rf = dict(request.form)
+                if 'page' in request.values:
+                    page = request.values['page']
+                    if page == 'sign':
+                        return render_template('gas/gas_in.html', user=user, gas_store=gas_store)
+                    elif page == 'ret':
+                        return render_template('gas/gas_out.html', user=user, gas_store=gas_store)
+                return render_template('gas/gas.html', user=user, gas_store=gas_store, docs=docs)
     return redirect('/')
 
 
@@ -172,7 +199,8 @@ def sign_gas():
                         photo = request.files['file']
                 gas.sign(dict(request.form), photo)
                 return redirect('/sign_gas')
-            return main_page(page='pages/sign_gas.html')
+            users = db_handle.all_users()
+            return render_template('gas/sign_gas.html', user=user, users=users)
     return redirect('/')
 
 
@@ -193,10 +221,14 @@ def ret_gas():
                 elif 'id' in rf:
                     docs = db_handle.read_docs({'id': rf['id']}, 'gas')
                     if not docs:
-                        msg = 'לא נמצאו טפסים'
+                        msg = 'לא נמצאו טפסים עבור {}'.format(rf['id'])
                 else:
                     docs['msg'] = 'ERROR'
-            return main_page(page='pages/return_gas.html', data={'docs': docs, 'msg': msg})
+            if user['department'] == 'לוגיסטיקה':
+                users = db_handle.all_users()
+            else:
+                users = db_handle.all_users({'department': user['department']})
+            return render_template('gas/return_gas.html', user=user, data={'docs': docs, 'msg': msg}, users=users)
     return redirect('/')
 
 
@@ -221,8 +253,15 @@ def personal():
     if 'username' in session and 'phone' in session:
         user = db_handle.validate_user(session['username'], session['phone'])
         if user:
+            if request.form:
+                print(request.form)
+                all_users = db_handle.all_users({'id': request.form['id']})
+                return render_template('pages/edit_personal.html', user=user, users=all_users)
+            elif 'id' in request.values:
+                all_users = db_handle.all_users({'id': request.values['id']})[0]
+                return render_template('pages/edit_person.html', user=user, users=all_users)
             all_users = db_handle.all_users()
-            return render_template('pages/personal.html', users=all_users, user=user)
+            return render_template('pages/personal.html', user=user, users=all_users)
     return redirect('/')
 
 

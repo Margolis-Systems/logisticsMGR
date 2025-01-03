@@ -1,3 +1,5 @@
+{% extends 'layout/layout.html' %}
+{% block body %}
 {% include 'layout/search.html' %}
 <tr><th colspan="5">מלאי מחסן</th></tr>
 <tr>
@@ -10,11 +12,15 @@
     <th colspan="2"></th>
 </tr>
 {% for i in data['inv']['actual'] %}
+{% if data['inv']['actual'][i] > 0 %}
 <tr>
     <td>{{i}}</td>
+    {% if not data['inv']['total'][i] %}
+    {% endif %}
     <td>{{data['inv']['actual'][i]}}/{{data['inv']['total'][i]}}</td>
     <td colspan="2"></td>
 </tr>
+{% endif %}
 {% endfor %}
 <tr>
     <th colspan="10">מקור מלאי</th>
@@ -32,3 +38,4 @@
 </tr>
 {% endfor %}
 {% endfor %}
+{% endblock %}

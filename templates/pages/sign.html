@@ -1,9 +1,14 @@
+{% extends 'layout/layout.html' %}
+{% block body %}
 <form method="POST" action="/sign" autocomplete="off">
     <tr>
         <th colspan="5">החתמה על ציוד</th>
     </tr>
     <tr>
-        <td colspan="5"><input class="sign_inpt" size="8" type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
+        <td colspan="2"><input class="sign_inpt" size="8" type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
+        <td colspan="2">
+            {% include 'layout/fulname_autocomplete.html' %}
+        </td>
     </tr>
     <tr>
         <td colspan="2"><input class="sign_inpt" size="8" name="name" id="name" placeholder="שם פרטי" required></td>
@@ -31,13 +36,6 @@
     {% endif %}
         <td>
             <input class="sign_inpt" list="prod" size="8" name="item{{loop.index0}}" id="item{{loop.index0}}" onchange="add_required('quantity{{loop.index0}}', this.value)" placeholder="שם פריט" {% if loop.index0==0 %}required{% endif %}>
-            <!--
-            <select name="item{{loop.index0}}" onchange="add_required('quantity{{loop.index0}}', this.value)" {% if loop.index0==0 %}required{% endif %}>
-                <option style="display:none" value="" selected>בחר פריט</option>
-                {% for i in data['items'] %}
-                <option value="{{i}}">{{i}}</option>
-                {% endfor %}
-            </select>-->
         </td>
         <td><input class="sign_inpt" size="2" type="number" name="quantity{{loop.index0}}" id="quantity{{loop.index0}}" placeholder="כמות"></td>
         <td><input class="sign_inpt" size="10" name="note{{loop.index0}}" placeholder="הערה"></td>
@@ -56,4 +54,11 @@
 </datalist>
 <script>
     var items = {{data|tojson|safe}}.items;
+    {% if data.id %}
+    var pid = {{data.id}};
+    {% endif %}
+    if (typeof pid !== 'undefined'){
+        document.getElementById('id').value = pid;
+    }
 </script>
+{% endblock %}

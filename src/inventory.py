@@ -3,9 +3,9 @@ from datetime import datetime
 
 
 def sign(dic, from_user=None):
-    # if 'add_new' in dic:
-    #     if dic['add_new'] == 'true':
-    main.db_handle.create_user(dic)
+    if 'add_new' in dic:
+        if dic['add_new'] == 'true':
+            main.db_handle.create_user(dic)
     doc = {'date': datetime.now(), 'items': [], 'sign': False}
     inv = main.db_handle.read_inv()
     for k in dic:

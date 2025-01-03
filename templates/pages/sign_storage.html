@@ -1,3 +1,5 @@
+{% extends 'layout/layout.html' %}
+{% block body %}
 <form method="POST" action="/sign" autocomplete="off">
     <tr>
         <th colspan="5">החתמת מחסן</th>
@@ -20,14 +22,14 @@
     </tr>
     <tr>
         <td colspan="2"><input class="sign_inpt" size="8" name="name" id="name" placeholder="שם פרטי" required></td>
-        <td colspan="5"><input class="sign_inpt" size="8" name="last_name" id="last_name" placeholder="שם משפחה" required></td>
+        <td colspan="5"><input class="sign_inpt" size="8" name="last_name" id="last_name" placeholder="שם משפחה"></td>
     </tr>
     <tr>
-        <td colspan="2"><input class="sign_inpt" size="8" name="department" id="department" placeholder="מחלקה" required></td>
-        <td colspan="5"><input class="sign_inpt" size="8" name="rank" id="rank" placeholder="דרגה" required></td>
+        <td colspan="2"><input class="sign_inpt" size="8" name="department" id="department" placeholder="מחלקה"></td>
+        <td colspan="5"><input class="sign_inpt" size="8" name="rank" id="rank" placeholder="דרגה"></td>
     </tr>
     <tr>
-        <td colspan="2"><input class="sign_inpt" size="8" type="number" name="phone" id="phone" placeholder="טלפון" required></td>
+        <td colspan="2"><input class="sign_inpt" size="8" type="number" name="phone" id="phone" placeholder="טלפון"></td>
         <td colspan="5"><input class="sign_inpt" size="8" type="number" name="car_plate" id="car_plate" placeholder="מס רכב"></td>
         <td></td>
     </tr>
@@ -58,3 +60,4 @@
 <script>
     var items = {{data|tojson|safe}}.items;
 </script>
+{% endblock %}

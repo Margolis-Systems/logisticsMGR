@@ -28,8 +28,10 @@ class Mongo:
             return user
         return {}
 
-    def all_users(self):
-        return list(self.db[config.users_col].find({}, {'_id': False}).sort([('department', 1), ('last_name', 1),
+    def all_users(self, query=None):
+        if query is None:
+            query = {}
+        return list(self.db[config.users_col].find(query, {'_id': False}).sort([('department', 1), ('last_name', 1),
                                                                                ('name', 1)]))
 
     def read_list(self, list_name):

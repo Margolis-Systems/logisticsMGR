@@ -1,11 +1,17 @@
+{% extends 'layout/layout.html' %}
+{% block body %}
 {% include 'layout/search.html' %}
 <tr><th colspan="5">רשימת ציוד מוחתם</th></tr>
+{% set ns = namespace(pid="")%}
 {% for doc in data %}
+{% if ns.pid != doc.id %}
 <tr>
     <th><button type="button" onclick="location.href='/ret?id={{doc.id}}'">זיכוי</button></th>
     <th colspan="5">{{doc.rank}} {{doc.name}} {{doc.last_name}} | {{doc.id}} | {{doc.phone}} | {{doc.department}}</th>
 </tr>
 <tr><th>פריט</th><th>כמות</th><th>הערה</th></tr>
+{% endif %}
+{% set ns.pid=doc.id %}
 {% for item in doc['items'] %}
 <tr>
     <td>{{item['description']}}</td>
@@ -14,3 +20,4 @@
 </tr>
 {% endfor %}
 {% endfor %}
+{% endblock %}
