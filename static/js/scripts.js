@@ -30,14 +30,15 @@ function get_info(person_id){
 }
 function scroll_to_row(text){
     var rows = document.querySelectorAll('#main_tb th');
-    for (r in rows.length){
+    for (let r = 0; r < rows.length; r++){
+        console.log(rows[r])
         if (rows[r].innerHTML.indexOf(text) != -1){
             rows[r].scrollIntoView({behavior: 'smooth',block: 'center'});
             break;
         }
     }
     var rows = document.querySelectorAll('#main_tb td');
-    for (r in rows.length){
+    for (let r = 0; r < rows.length; r++){
         if (rows[r].innerHTML.indexOf(text) != -1){
             rows[r].scrollIntoView({behavior: 'smooth',block: 'center'});
             break;
