@@ -242,21 +242,20 @@ def init(force=False):
                     return
             else:
                 return
-    config.descriptions = db_handle.read_list('descriptions')
     config.dictionary = db_handle.read_list('dictionary')
     config.doc_items = db_handle.read_list('doc_items')
     config.user_items = db_handle.read_list('user_items')
 
 
-@app.route('/personal')
+@app.route('/personal', methods=['POST', 'GET'])
 def personal():
     if 'username' in session and 'phone' in session:
         user = db_handle.validate_user(session['username'], session['phone'])
         if user:
             if request.form:
-                print(request.form)
-                all_users = db_handle.all_users({'id': request.form['id']})
-                return render_template('pages/edit_personal.html', user=user, users=all_users)
+                db_handle.create_user(dict(request.form))
+                all_users = db_handle.all_users({'id': request.form['id']})[0]
+                return render_template('pages/edit_person.html', user=user, users=all_users)
             elif 'id' in request.values:
                 all_users = db_handle.all_users({'id': request.values['id']})[0]
                 return render_template('pages/edit_person.html', user=user, users=all_users)

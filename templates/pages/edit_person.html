@@ -1,6 +1,7 @@
 {% extends 'layout/layout.html' %}
 {% block body %}
 <tr><th colspan="5">פעולות: {{users.name}} {{users.last_name}}</th></tr>
+<form method="POST" autocomplete="off">
 <tr>
     <td colspan="2">עריכה:</td>
     <td colspan="5"><input class="sign_inpt" size="8" type="number" name="id" id="id" placeholder="מספר אישי" value="{{users.id}}" required autofocus></td>
@@ -16,8 +17,11 @@
 <tr>
     <td colspan="2"><input class="sign_inpt" size="8" type="number" name="phone" id="phone" placeholder="טלפון" value="{{users.phone}}" required></td>
     <td colspan="5"><input class="sign_inpt" size="8" type="number" name="car_plate" id="car_plate" value="{{users.car_plate}}" placeholder="מס רכב"></td>
-    <td></td>
 </tr>
+<tr>
+    <td colspan="5"><button class="btn btn-success btn-lg" type="submit">עדכן פרטים</button> </td>
+</tr>
+</form>
 <tr><th>ציוד</th><th colspan="2">דלק</th></tr>
 <tr>
     <td><button class="btn btn-lg btn-success" style="width:300px;height:200px;" onclick="location.href='/sign?id={{users.id}}'">החתמת ציוד</button></td>

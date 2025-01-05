@@ -14,10 +14,9 @@ lists_col = 'lists'
 admin_department = 'לוגיסטיקה'
 
 # Lists
-user_items = []
+user_items = ['id', 'name', 'last_name', 'rank', 'phone', 'car_plate', 'department', 'priv']
 doc_items = []
 dictionary = {}
-descriptions = []
 
 # Sms configs
 sms_account_id = os.environ.get("sms_account_id")
