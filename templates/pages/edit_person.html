@@ -4,22 +4,29 @@
 <form method="POST" autocomplete="off">
 <tr>
     <td colspan="2">עריכה:</td>
-    <td colspan="5"><input class="sign_inpt" size="8" type="number" name="id" id="id" placeholder="מספר אישי" value="{{users.id}}" required autofocus></td>
+    <td colspan="5" class="form-floating"></td>
 </tr>
 <tr>
-    <td colspan="2"><input class="sign_inpt" size="8" name="name" id="name" placeholder="שם פרטי" value="{{users.name}}" required></td>
-    <td colspan="5"><input class="sign_inpt" size="8" name="last_name" id="last_name" placeholder="שם משפחה" value="{{users.last_name}}" required></td>
+    <td colspan="2"></td>
+    <td colspan="5">
+        <input name="id" id="id" type="number" class="form-control-lg sign_inpt" placeholder="מספר אישי" aria-label="Username" aria-describedby="basic-addon1" value="{{users.id}}" required autofocus>
+    </td>
 </tr>
 <tr>
-    <td colspan="2"><input class="sign_inpt" size="8" name="department" id="department" placeholder="מחלקה" value="{{users.department}}" required></td>
-    <td colspan="5"><input class="sign_inpt" size="8" name="rank" id="rank" placeholder="דרגה" value="{{users.rank}}" required></td>
+    <td colspan="2"><input class="sign_inpt form-control-lg" size="8" name="name" id="name" placeholder="שם פרטי" value="{{users.name}}" required></td>
+    <td colspan="5"><input class="sign_inpt form-control-lg" size="8" name="last_name" id="last_name" placeholder="שם משפחה" value="{{users.last_name}}" required></td>
 </tr>
 <tr>
-    <td colspan="2"><input class="sign_inpt" size="8" type="number" name="phone" id="phone" placeholder="טלפון" value="{{users.phone}}" required></td>
-    <td colspan="5"><input class="sign_inpt" size="8" type="number" name="car_plate" id="car_plate" value="{{users.car_plate}}" placeholder="מס רכב"></td>
+    <td colspan="2"><input class="sign_inpt form-control-lg" size="8" name="department" id="department" placeholder="מחלקה" value="{{users.department}}" required></td>
+    <td colspan="5"><input class="sign_inpt form-control-lg" size="8" name="rank" id="rank" placeholder="דרגה" value="{{users.rank}}" required></td>
 </tr>
 <tr>
-    <td colspan="5"><button class="btn btn-success btn-lg" type="submit">עדכן פרטים</button> </td>
+    <td colspan="2"><input class="sign_inpt form-control-lg" size="8" type="number" name="phone" id="phone" placeholder="טלפון" value="{{users.phone}}" required></td>
+    <td colspan="5"><input class="sign_inpt form-control-lg" size="8" type="number" name="car_plate" id="car_plate" value="{{users.car_plate}}" placeholder="מס רכב"></td>
+</tr>
+<tr>
+    <td colspan="2"><button class="btn btn-success btn-lg" type="submit">עדכן פרטים</button> </td>
+    <td colspan="5"><button class="btn btn-danger btn-lg" type="button" onclick="delete_personal({{users.id}})">מחק</button> </td>
 </tr>
 </form>
 <tr><th>ציוד</th><th colspan="2">דלק</th></tr>

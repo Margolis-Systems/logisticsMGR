@@ -11,12 +11,12 @@
 {% endfor %}
 {% endfor %}
 <tr>
-    <td><button class="btn btn-success btn-lg">חתימה למחסן</button></td>
-    <td colspan="2"><button class="btn btn-danger btn-lg">זיכוי מחסן</button></td>
+    <td><button class="btn btn-success btn-lg" onclick="location.href='/gas?page=sign'">חתימה למחסן</button></td>
+    <td colspan="2"><button class="btn btn-danger btn-lg" onclick="location.href='/gas?page=ret'">זיכוי מחסן</button></td>
 </tr>
 {% for doc in docs %}
 {% for k in doc %}
-{% if k not in ['id', 'ids', 'name', 'last_name'] %}
+{% if k not in ['id', 'ids', 'name', 'last_name', 'date', 'doc_id', 'sign'] %}
 {% for l in doc[k] %}
 <tr>
     <td><button>זיכוי</button> {{doc['name']}} {{doc['last_name']}}</td><td>{{k}} {{l}}</td><td>{{doc[k][l]['quantity']}}</td>

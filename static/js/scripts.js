@@ -31,7 +31,6 @@ function get_info(person_id){
 function scroll_to_row(text){
     var rows = document.querySelectorAll('#main_tb th');
     for (let r = 0; r < rows.length; r++){
-        console.log(rows[r])
         if (rows[r].innerHTML.indexOf(text) != -1){
             rows[r].scrollIntoView({behavior: 'smooth',block: 'center'});
             break;
@@ -91,6 +90,12 @@ function  gas_qnty(){
 function sign_doc(){
     if (confirm("מאשר שעברתי על רשימת הציוד שהתקבל")) {
         document.getElementById('main_form').submit();
+    }
+}
+
+function delete_personal(pid){
+    if (confirm("לחיצה על אישור תוביל למחיקת איש הקשר")) {
+        window.location.href='/personal?delete=&id='+pid;
     }
 }
 

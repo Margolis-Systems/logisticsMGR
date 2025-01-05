@@ -82,6 +82,31 @@ class Mongo:
             self.db[config.storage_col].update_one({},
                                                    {'$inc': {i['description']: i['quantity']}}, upsert=True)
 
+    def read_one(self, col, query=None, sort=None):
+        if not query:
+            query = {}
+        # query.update({'_id': False})
+        if sort:
+            return self.db[col].find_one(query).sort(sort)
+        return self.db[col].find_one(query, {'_id': False})
 
+    def read(self, col, query=None, sort=None):
+        if not query:
+            query = {}
+        query.update({'_id': False})
+        if sort:
+            return self.db[col].find(query).sort(sort)
+        return self.db[col].find(query)
 
+    def update_one(self, col, key, query=None, upsert=False):
+        self.db[col].update_one(key, query, upsert=upsert)
+
+    def update_many(self, col, key, query=None, upsert=False):
+        self.db[col].update(key, query, upsert=upsert)
+
+    def delete_one(self, col, query):
+        self.db[col].delete_one(query)
+
+    def delete_many(self, col, query):
+        self.db[col].delete_many(query)
 

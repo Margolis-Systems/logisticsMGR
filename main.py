@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request, make_response, stream_with_context, Response, session
-from src import config, db_handler, inventory, sms_handler, gas
+from src import config, db_handler, inventory, sms_handler, gas, users
 import secrets
-from datetime import datetime
+from datetime import datetime, timedelta
 
 sms = sms_handler.Sms()
 db_handle = db_handler.Mongo()
@@ -30,26 +30,46 @@ def main_page():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     msg = ''
+    cookie_id = request.cookies.get('id')
+    cookie_phone = request.cookies.get('phone')
     if request.form:
         # todo: second step token from sms
         req = dict(request.form)
         if 'id' in req and 'phone' in req:
             user = db_handle.validate_user(req['id'], req['phone'])
-            session['username'] = req['id']
-            session['phone'] = req['phone']
             # session['pass'] = secrets.token_urlsafe(16)
             if user:
-                return redirect('/')
+                session['username'] = req['id']
+                session['phone'] = req['phone']
+                resp = make_response()
+                resp.headers['location'] = '/'
+                expire_date = datetime.now() + timedelta(days=60)
+                resp.set_cookie('id', req['id'], expires=expire_date)
+                resp.set_cookie('phone', req['phone'], expires=expire_date)
+                return resp, 302
             else:
                 msg = 'לא נמצאו תוצאות'
-    return render_template('pages/login.html', data={'msg':msg})
+    elif cookie_id and cookie_phone:
+        user = db_handle.validate_user(cookie_id, cookie_phone)
+        if user:
+            session['username'] = cookie_id
+            session['phone'] = cookie_phone
+            return redirect('/')
+        else:
+            msg = 'לא נמצאו תוצאות'
+    return render_template('pages/login.html', data={'msg': msg})
 
 
 @app.route('/logout')
 def logout():
     session.clear()
     session.modified = True
-    return redirect('/')
+    resp = make_response()
+    resp.headers['location'] = '/'
+    expire_date = datetime.now()
+    resp.set_cookie('id', '', expires=expire_date)
+    resp.set_cookie('phone', '', expires=expire_date)
+    return resp, 302
 
 
 @app.route('/get_info', methods=['POST', 'GET'])
@@ -177,6 +197,7 @@ def gas_main():
                     del gas_store['storage']
                 if request.form:
                     rf = dict(request.form)
+                    print('gas main fr', rf)
                 if 'page' in request.values:
                     page = request.values['page']
                     if page == 'sign':
@@ -217,13 +238,9 @@ def ret_gas():
             if rf:
                 if len(rf.keys()) > 1:
                     gas.ret(dict(request.form))
-                    return redirect('/ret_gas')
-                elif 'id' in rf:
-                    docs = db_handle.read_docs({'id': rf['id']}, 'gas')
-                    if not docs:
-                        msg = 'לא נמצאו טפסים עבור {}'.format(rf['id'])
-                else:
-                    docs['msg'] = 'ERROR'
+                docs = db_handle.read_docs({'id': rf['id']}, 'gas')
+                if not docs:
+                    msg = 'לא נמצאו טפסים עבור {}'.format(rf['id'])
             if user['department'] == 'לוגיסטיקה':
                 users = db_handle.all_users()
             else:
@@ -256,6 +273,10 @@ def personal():
                 db_handle.create_user(dict(request.form))
                 all_users = db_handle.all_users({'id': request.form['id']})[0]
                 return render_template('pages/edit_person.html', user=user, users=all_users)
+            elif 'delete' in request.values:
+                user = users.validate_user(request.values['id'], '', True)
+                if not user['docs']:
+                    db_handle.delete_one('users', {'id': request.values['id']})
             elif 'id' in request.values:
                 all_users = db_handle.all_users({'id': request.values['id']})[0]
                 return render_template('pages/edit_person.html', user=user, users=all_users)

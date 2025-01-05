@@ -1,24 +1,28 @@
 {% extends 'layout/layout.html' %}
 {% block body %}
 <tr><th colspan="5">זיכוי כ. דלק</th></tr>
-<form method="POST">
 {% if data.docs %}
+<form method="POST">
     <tr><td colspan="5">{{data.docs[0].id}} {{data.docs[0].name}} {{data.docs[0].last_name}}</td></tr>
     <input type="hidden" name="id" value="{{data.docs[0].id}}">
+    <tr><th>סוג</th><th>כמות מוחתם</th><th>כמות לזיכוי</th></tr>
     {% for doc in data.docs %}
-    {% for l in doc['items'] %}
+    {% for k in doc %}
+    {% if k not in ['id', 'ids', 'name', 'last_name', 'date', 'doc_id', 'sign'] %}
+    {% for l in doc[k] %}
     <tr>
-        <td>{{l.type}}</td>
-        <td>{{l.serial}}</td>
-        <td><input class="form-check-input" type="checkbox" name="{{doc.date}}|{{l.type}}|{{l.serial}}"></td>
+        <td>{{k}} {{l}}</td><td>{{doc[k][l]['quantity']}}</td><td><input class="sign_inpt" type="number" name="{{k}}|{{l}}{{doc.doc_id}}" placeholder="כמות לזיכוי"></td>
     </tr>
+    {% endfor %}
+    {% endif %}
     {% endfor %}
     {% endfor %}
     <tr>
         <td><button type="submit" class="btn btn-lg btn-success">אישור</button> </td>
         <td></td>
-        <td><button type="button" class="btn btn-lg btn-danger" onclick="history.back()'">חזור</button> </td>
+        <td><button type="button" class="btn btn-lg btn-danger" onclick="location.href='/ret_gas'">חזור</button> </td>
     </tr>
+</form>
 {% else %}
     <tr><th>בחר מרשימה</th><th>הזן מס אישי</th></tr>
     <tr>
@@ -30,11 +34,13 @@
                 {% endfor %}
             </select>
         </td>
+        <form method="POST">
         <td colspan="5"><input class="sign_inpt" size="8" type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
+        </form>
     </tr>
+    <tr><td colspan="5"><button class="btn btn-success btn-lg">אישור</button> </td> </tr>
     {% if data.msg %}
     <tr><td colspan="5"><label style="color:red;">{{data.msg}}</label></td></tr>
     {% endif %}
 {% endif %}
-</form>
 {% endblock %}

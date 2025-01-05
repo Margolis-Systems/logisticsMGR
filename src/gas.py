@@ -1,27 +1,31 @@
+import os.path
+
 import main
 from datetime import datetime
 
 
 def sign(dic, photo=None):
+    qnt = int(dic['quantity'])
+    if qnt <= 0:
+        return
     doc_id = ts()
-    doc = {'date': datetime.now(), 'items': [], 'doc_id': doc_id, 'sign': False}
+    doc = {'date': datetime.now(), 'doc_id': doc_id, 'sign': False}
     for k in dic:
         if k in ['id', 'name', 'last_name', 'rank', 'department', 'phone']:
             doc[k] = dic[k]
     if photo:
         doc['photo'] = doc_id
+        if not os.path.exists('static/img/gas'):
+            os.mkdir('static/img/gas')
         filename = 'static/img/gas/{}.jpeg'.format(doc_id)
         photo.save(filename)
-    for i in range(int(dic['quantity'])):
-        new = {'serial': 0, 'type': dic['type']}
-        if dic['serial_s'] and dic['serial_e']:
-            new['serial'] = int(dic['serial_s'])+i
-        doc['items'].append(new)
-    if doc['items']:
-        main.db_handle.write_doc(doc, 'gas')
+    doc[dic['type']] = {dic['liter']: {'quantity': qnt}}
+    main.db_handle.write_doc(doc, 'gas')
+    # todo update inv
 
 
 def ret(dic):
+    print(dic)
     return
 
 
