@@ -28,21 +28,27 @@ function get_info(person_id){
         }
     });
 }
+
+var search = '';
+var idx = -1;
 function scroll_to_row(text){
     var rows = document.querySelectorAll('#main_tb th');
     for (let r = 0; r < rows.length; r++){
-        if (rows[r].innerHTML.indexOf(text) != -1){
+        if (rows[r].innerHTML.indexOf(text) != -1 && r != idx){
             rows[r].scrollIntoView({behavior: 'smooth',block: 'center'});
+            idx = r;
             break;
         }
     }
     var rows = document.querySelectorAll('#main_tb td');
     for (let r = 0; r < rows.length; r++){
-        if (rows[r].innerHTML.indexOf(text) != -1){
+        if (rows[r].innerHTML.indexOf(text) != -1 && r != idx){
             rows[r].scrollIntoView({behavior: 'smooth',block: 'center'});
+            idx = r;
             break;
         }
     }
+    search = text;
 }
 
 var r_index = 2;
