@@ -15,7 +15,7 @@
     <tr>
         <td>{{l.description}}</td>
         <td>{{l.quantity}}</td>
-        <td><input class="gsign_inpt" type="number" name="{{doc.date}}|{{l.description}}|{{loop.index0}}" min="1" max="{{l.quantity}}" placeholder="זיכוי"></td>
+        <td><input class="gsign_inpt" type="number" name="{{doc.date}}|{{l.description}}|{{doc['items']|length - loop.index}}" min="1" max="{{l.quantity}}" placeholder="זיכוי"></td>
     </tr>
     {% endfor %}
     {% endfor %}

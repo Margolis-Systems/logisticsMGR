@@ -150,9 +150,11 @@ def ret():
                     docs = db_handle.read_docs({'id': rf['id']})
                     if not docs:
                         msg = 'לא נמצאו טפסים עבור {}'.format(rf['id'])
+                    else:
+                        docs.reverse()
                 else:
                     docs['msg'] = 'ERROR'
-            return render_template('pages/return.html', user=user, data={'docs': docs, 'msg': msg})
+            return render_template('pages/return.html', user=user, data={'docs': docs, 'msg': msg}, users=db_handle.all_users())
     return redirect('/')
 
 
@@ -277,6 +279,8 @@ def personal():
                 user = users.validate_user(request.values['id'], '', True)
                 if not user['docs']:
                     db_handle.delete_one('users', {'id': request.values['id']})
+                else:
+                    return redirect('/personal')
             elif 'id' in request.values:
                 all_users = db_handle.all_users({'id': request.values['id']})[0]
                 return render_template('pages/edit_person.html', user=user, users=all_users)

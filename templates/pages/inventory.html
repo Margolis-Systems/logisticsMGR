@@ -13,6 +13,7 @@
 </tr>
 {% for i in data['inv']['actual'] %}
 {% if data['inv']['actual'][i] > 0 %}
+{% endif %}
 <tr>
     <td>{{i}}</td>
     {% if not data['inv']['total'][i] %}
@@ -20,7 +21,7 @@
     <td>{{data['inv']['actual'][i]}}/{{data['inv']['total'][i]}}</td>
     <td colspan="2"></td>
 </tr>
-{% endif %}
+<!--endif-->
 {% endfor %}
 <tr>
     <th colspan="10">מקור מלאי</th>

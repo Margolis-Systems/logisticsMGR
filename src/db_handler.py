@@ -24,7 +24,8 @@ class Mongo:
         user = self.db[config.users_col].find_one(query, {'_id': False})
         if user:
             user = dict(user)
-            user['docs'] = list(self.db[config.docs_col].find({'id': uid}, {'_id': False}))
+            user['docs'] = self.read_docs({'id': uid})
+            # user['docs'] = list(self.db[config.docs_col].find({'id': uid}, {'_id': False}))
             return user
         return {}
 
@@ -80,7 +81,7 @@ class Mongo:
     def update_inv(self, items):
         for i in items:
             self.db[config.storage_col].update_one({},
-                                                   {'$inc': {i['description']: i['quantity']}}, upsert=True)
+                                                   {'$inc': {i['description']: int(i['quantity'])}}, upsert=True)
 
     def read_one(self, col, query=None, sort=None):
         if not query:
