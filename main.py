@@ -282,7 +282,7 @@ def personal():
                 else:
                     return redirect('/personal')
             elif 'id' in request.values:
-                all_users = db_handle.all_users({'id': request.values['id']})[0]
+                all_users = users.validate_user(request.values['id'],'',True)
                 return render_template('pages/edit_person.html', user=user, users=all_users)
             all_users = db_handle.all_users()
             return render_template('pages/personal.html', user=user, users=all_users)

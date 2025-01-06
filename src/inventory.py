@@ -34,16 +34,17 @@ def sign(dic, from_user=None):
         main.db_handle.write_doc(doc)
         for i in range(len(doc['items'])):
             if 'storage' not in dic:
-                if doc['items'][i]['description'] in inv.keys():
-                    doc['items'][i]['quantity'] *= -1
-                else:
-                    sign_store = doc.copy()
-                    sign_store['storage'] = True
-                    sign_store['id'] = '0'
-                    sign_store['name'] = 'מחסן'
-                    sign_store['items'] = [doc['items'][i]]
-                    main.db_handle.write_doc(sign_store)
-                    doc['items'][i]['quantity'] = 0
+                doc['items'][i]['quantity'] *= -1
+                # if doc['items'][i]['description'] in inv.keys():
+                #     doc['items'][i]['quantity'] *= -1
+                # else:
+                #     sign_store = doc.copy()
+                #     sign_store['storage'] = True
+                #     sign_store['id'] = '0'
+                #     sign_store['name'] = 'מחסן'
+                #     sign_store['items'] = [doc['items'][i]]
+                #     main.db_handle.write_doc(sign_store)
+                #     doc['items'][i]['quantity'] = 0
         main.db_handle.update_inv(doc['items'])
 
 
@@ -53,7 +54,6 @@ def ret(dic, storage=False):
         if k == 'id':
             continue
         elif dic[k]:
-            print(k)
             date, description, idx = k.split('|')
             qnt = int(dic[k])
             main.db_handle.return_item(pid, date, int(idx), qnt)

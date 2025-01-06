@@ -62,13 +62,14 @@ function add_required(elem_id, cur_val){
     if (element){
         element.required = true;
         if (items){
-            if (items.hasOwnProperty(cur_val)){
-                element.setAttribute('max', items[cur_val])
-                element.setAttribute('min', 1)
-            }
-            else{
-                window.alert('פריט לא נמצא במלאי')
-            }
+            if (!items.hasOwnProperty(cur_val)){window.alert('פריט לא נמצא במלאי')}
+            //if (items.hasOwnProperty(cur_val)){
+            //    element.setAttribute('max', items[cur_val])
+            //    element.setAttribute('min', 1)
+            //}
+            //else{
+            //    window.alert('פריט לא נמצא במלאי')
+            //}
         }
     }
 }

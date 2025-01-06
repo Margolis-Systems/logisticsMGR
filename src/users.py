@@ -19,7 +19,8 @@ def validate_user(uid, phone, admin=False):
     user = mongo.read_one(config.users_col, query)
     if user:
         user = dict(user)
-        user['docs'] = list(mongo.read_one(config.docs_col, {'id': uid}))
+        user['docs'] = list(mongo.read(config.docs_col, {'id': uid}))
+        print(user['docs'])
         return user
     return {}
 

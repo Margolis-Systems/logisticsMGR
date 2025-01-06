@@ -38,4 +38,19 @@
     <td><button class="btn btn-lg btn-danger" style="width:300px;height:200px;" onclick="location.href='/ret?id={{users.id}}'">זיכוי ציוד</button></td>
     <td colspan="2"><button class="btn btn-lg btn-danger" style="width:300px;height:200px;" onclick="location.href='/ret_gas?id={{users.id}}'">זיכוי דלק</button></td>
 </tr>
+<tr>
+    <th>פריט</th>
+    <th>כמות חתום</th>
+    <th>הערה</th>
+</tr>
+{% for doc in users.docs %}
+{% for l in doc['items'] %}
+<tr>
+    <td>{{l.description}}</td>
+    <td>{{l.quantity}}</td>
+    <td>{{l.note}}</td>
+</tr>
+{% endfor %}
+{% endfor %}
+<tr>
 {% endblock %}

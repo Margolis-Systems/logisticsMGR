@@ -94,7 +94,7 @@ class Mongo:
     def read(self, col, query=None, sort=None):
         if not query:
             query = {}
-        query.update({'_id': False})
+        # query.update({'_id': False})
         if sort:
             return self.db[col].find(query).sort(sort)
         return self.db[col].find(query)
