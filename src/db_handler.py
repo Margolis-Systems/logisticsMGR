@@ -103,7 +103,7 @@ class Mongo:
         self.db[col].update_one(key, query, upsert=upsert)
 
     def update_many(self, col, key, query=None, upsert=False):
-        self.db[col].update(key, query, upsert=upsert)
+        self.db[col].update_many(key, query, upsert=upsert)
 
     def delete_one(self, col, query):
         self.db[col].delete_one(query)

@@ -11,7 +11,7 @@ def sign(dic, from_user=None):
     for k in dic:
         if 'item' in k and dic[k]:
             # todo: 'cat'?
-            item = {'cat': '', 'description': dic[k], 'quantity': dic[k.replace('item', 'quantity')],
+            item = {'cat': '', 'description': dic[k], 'quantity': int(dic[k.replace('item', 'quantity')]),
                     'note': dic[k.replace('item', 'note')]}
             doc['items'].append(item)
         elif k in ['id', 'name', 'last_name', 'department'] and 'storage' not in dic:
