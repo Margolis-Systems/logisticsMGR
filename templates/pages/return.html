@@ -27,6 +27,7 @@
 </form>
 {% else %}
     <tr><th>בחר מרשימה</th><th>הזן מס אישי</th></tr>
+    <form method="POST">
     <tr>
         <td>
             <select class="sign_inpt" name="full_name" id="full_name" onchange="update_id(this.value)">
@@ -36,11 +37,10 @@
                 {% endfor %}
             </select>
         </td>
-        <form method="POST">
         <td colspan="5"><input class="sign_inpt" size="8" type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
-        </form>
     </tr>
     <tr><td colspan="5"><button class="btn btn-success btn-lg">אישור</button> </td> </tr>
+    </form>
     {% if data.msg %}
     <tr><td colspan="5"><label style="color:red;">{{data.msg}}</label></td></tr>
     {% endif %}

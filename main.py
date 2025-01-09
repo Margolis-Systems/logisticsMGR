@@ -115,17 +115,17 @@ def sign():
                 inventory.sign(rf, user)
                 docs = db_handle.read_docs({'id': rf['id'], 'sign': False})
                 if docs:
-                    msg = 'פיקוד העורף - גדוד ניוד\nהוחתמת על ציוד באופן דיגיטלי.\n'
+                    msg = 'הר ציון - גדוד צפון - לוגיסטיקה\n\nהנך חתומ.ה על הציוד:\n'
                     send = False
                     for doc in docs:
                         for item in doc['items']:
-                            msg += '\n{} : {} יח'.format(item['description'], item['quantity'])
+                            msg += "\n{} : {} יח'".format(item['description'], item['quantity'])
                             send = True
                     if send:
                         token = ''
                         # todo: gen and save token
-                        msg += '\nלאישור לחץ:\n{}sms_sign?id={}&token={}'.format(str(request.host_url), rf['id'], token)
-                        sms.send_sms(msg, [rf['phone']])
+                        msg += '\n\nלאישור לחץ:\n{}sms_sign?id={}&token={}'.format(str(request.host_url), rf['id'], token)
+                        # sms.send_sms(msg, [rf['phone']])
                 return redirect('/sign')
             elif request.values:
                 if 'id' in request.values:
@@ -348,8 +348,9 @@ def download():
                     for i in d['items']:
                         i.update(info)
                         data.append(i)
-                file = file_handler.CSV.create_csv('static/csv/{}.csv'.format(file_name), data, headers)
-                return send_from_directory(os.path.dirname(file), os.path.basename(file), as_attachment=True)
+                file = file_handler.EXCEL.create_xlsx('static/csv/{}.xlsx'.format(file_name), data, headers)
+                # file = file_handler.CSV.create_csv('static/csv/{}.csv'.format(file_name), data, headers)
+                return send_from_directory(os.path.dirname(file), os.path.basename(file), as_attachment=True, mimetype="Content-Type: text/csv; charset=utf-8")
     return '', 204
 
 
