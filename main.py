@@ -331,10 +331,10 @@ def download():
             if 'storage' in rv:
                 headers = ['name', 'description', 'quantity', 'note', 'in_stock']
                 query = {'storage': {'$exists': True}}
-                file_name = 'מלאי'
+                file_name = 'inventory'
             else:
                 headers = ['name', 'last_name', 'id', 'department', 'description', 'quantity', 'note']
-                file_name = 'ציוד_מוחתם'
+                file_name = 'signed'
                 query = {'storage': {'$exists': False}}
             docs = db_handle.read_docs(query)
             if docs:
