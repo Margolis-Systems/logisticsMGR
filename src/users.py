@@ -20,7 +20,6 @@ def validate_user(uid, phone, admin=False):
     if user:
         user = dict(user)
         user['docs'] = list(mongo.read(config.docs_col, {'id': uid}))
-        print(user['docs'])
         return user
     return {}
 

@@ -10,9 +10,11 @@
     {% for k in doc %}
     {% if k not in ['id', 'ids', 'name', 'last_name', 'date', 'doc_id', 'sign'] %}
     {% for l in doc[k] %}
+    {% if doc[k][l]['quantity'] > 0 %}
     <tr>
-        <td>{{k}} {{l}}</td><td>{{doc[k][l]['quantity']}}</td><td><input class="sign_inpt" type="number" name="{{k}}|{{l}}{{doc.doc_id}}" placeholder="כמות לזיכוי"></td>
+        <td>{{k}} {{l}}</td><td>{{doc[k][l]['quantity']}}</td><td><input min="1" max="{{doc[k][l]['quantity']}}" class="sign_inpt" type="number" name="{{k}}|{{l}}|{{doc.doc_id}}" placeholder="כמות לזיכוי"></td>
     </tr>
+    {% endif %}
     {% endfor %}
     {% endif %}
     {% endfor %}

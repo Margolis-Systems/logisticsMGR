@@ -1,0 +1,68 @@
+{% extends 'layout/layout.html' %}
+{% block body %}
+<tr><th colspan="5">{{users.name}} {{users.last_name}}</th></tr>
+{% if users.docs %}
+<form method="POST" autocomplete="off" id="ret_form">
+<input type="hidden" name="action" value="ret">
+<input type="hidden" name="id" value="{{users.id}}">
+<tr>
+    <th>פריט</th>
+    <th>כמות חתום</th>
+    <th>הערה</th>
+    <th>כמות זיכוי</th>
+</tr>
+{% for doc in users.docs %}
+{% for l in doc['items'] %}
+<tr>
+    <td>{{l.description}}</td>
+    <td>{{l.quantity}}</td>
+    <td>{{l.note}}</td>
+    <td><input class="gsign_inpt" type="number" name="{{doc.date}}|{{l.description}}|{{doc['items']|length - loop.index}}" min="1" max="{{l.quantity}}" placeholder="זיכוי"></td>
+</tr>
+{% endfor %}
+{% endfor %}
+<tr>
+    <td><button type="button" onclick="ret_form.submit()" class="btn btn-success btn-lg">זיכוי</button></td>
+    <td colspan="2"></td>
+    <td><button type="button" onclick="location.reload();" class="btn btn-warning btn-lg">ביטול</button></td>
+</tr>
+{% else %}
+<tr><td colspan="5">לא חתום על ציוד</td></tr>
+</form>
+{% endif %}
+<tr>
+    <th>שם</th>
+    <th>כמות</th>
+    <th colspan="2">הערה</th>
+</tr>
+<form method="POST" id="sign_form" aria-disabled="true">
+<input type="hidden" name="action" value="sign">
+<input type="hidden" name="id" value="{{users.id}}">
+{% for i in range(30) %}
+{% if i > 2 %}
+<tr style="display:none;" id="row{{loop.index0}}">
+{% else %}
+<tr id="row{{loop.index0}}">
+{% endif %}
+    <td>
+        <input class="sign_inpt" list="prod" size="8" name="item{{loop.index0}}" id="item{{loop.index0}}" onchange="add_required('quantity{{loop.index0}}', this.value)" placeholder="שם פריט" {% if loop.index0==0 %}required{% endif %}>
+    </td>
+    <td><input class="gsign_inpt" size="2" type="number" name="quantity{{loop.index0}}" id="quantity{{loop.index0}}" placeholder="כמות"></td>
+    <td colspan="2"><input class="sign_inpt" size="10" name="note{{loop.index0}}" placeholder="הערה"></td>
+</tr>
+{% endfor %}
+<tr>
+    <td><button type="button" onclick="sign_form.submit()" class="btn btn-success btn-lg">החתמה</button></td>
+    <td colspan="2"></td>
+    <td><button type="button" onclick="add_row()" class="btn btn-primary btn-lg">+שורה</button></td>
+</tr>
+</form>
+<datalist id="prod">
+    {% for i in data['items'] %}
+    <option value="{{i}}">{{i}}</option>
+    {% endfor %}
+</datalist>
+<script>
+    var items = {{data|tojson|safe}}.items;
+</script>
+{% endblock %}

@@ -2,6 +2,7 @@
 {% block body %}
 {% include 'layout/search.html' %}
 <tr><th colspan="5">רשימת ציוד מוחתם</th></tr>
+<th><button class="btn btn-warning btn-lg" onclick="location.href='/download?csv='">יצוא</button> </th>
 {% set ns = namespace(pid="")%}
 {% for doc in data %}
 {% if ns.pid != doc.id %}

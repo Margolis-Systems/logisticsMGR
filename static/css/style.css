@@ -1,7 +1,7 @@
 .sign_inpt{
     width:300px!important;
     background-color:#DAF7A6;
-    font-size:36px;
+    font-size:40px;
 }
 
 .search_inpt{
@@ -12,6 +12,7 @@
 .gsign_inpt{
     width:200px!important;
     background-color:#DAF7A6;
+    font-size:40px;
 }
 
 .camera_btn{

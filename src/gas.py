@@ -25,8 +25,16 @@ def sign(dic, photo=None):
 
 
 def ret(dic):
-    print(dic)
-    return
+    # docs = db_handle.read_docs({'id': rf['id']}, 'gas')
+    pid = dic['id']
+    for k in dic:
+        if '|' in k:
+            if dic[k]:
+                ctype, litters, doc_id = k.split('|')
+                quantity = -int(dic[k])
+                main.db_handle.update_one('gas', {'id': pid, 'doc_id': doc_id},
+                                          {'$inc': {'{}.{}.quantity'.format(ctype, litters): quantity}})
+                # todo: update inv
 
 
 def ts():

@@ -1,7 +1,8 @@
-from flask import Flask, render_template, redirect, request, make_response, stream_with_context, Response, session
-from src import config, db_handler, inventory, sms_handler, gas, users
+from flask import Flask, render_template, redirect, request, make_response, stream_with_context, Response, session, send_from_directory
+from src import config, db_handler, inventory, sms_handler, gas, users, file_handler
 import secrets
 from datetime import datetime, timedelta
+import os
 
 sms = sms_handler.Sms()
 db_handle = db_handler.Mongo()
@@ -112,23 +113,24 @@ def sign():
             if request.form:
                 rf = dict(request.form)
                 inventory.sign(rf, user)
-                msg = 'פיקוד העורף - גדוד ניוד\nהוחתמת על ציוד באופן דיגיטלי.\nלצפיה, יש להכנס בקישור המצורף:\n\n{}'.format(
-                    str(request.host_url))
-                sms.send_sms(msg, [rf['phone']])
+                docs = db_handle.read_docs({'id': rf['id'], 'sign': False})
+                if docs:
+                    msg = 'פיקוד העורף - גדוד ניוד\nהוחתמת על ציוד באופן דיגיטלי.\n'
+                    send = False
+                    for doc in docs:
+                        for item in doc['items']:
+                            msg += '\n{} : {} יח'.format(item['description'], item['quantity'])
+                            send = True
+                    if send:
+                        token = ''
+                        # todo: gen and save token
+                        msg += '\nלאישור לחץ:\n{}sms_sign?id={}&token={}'.format(str(request.host_url), rf['id'], token)
+                        sms.send_sms(msg, [rf['phone']])
                 return redirect('/sign')
             elif request.values:
                 if 'id' in request.values:
                     pid = request.values['id']
-            items = {}
-            if user['department'] == config.admin_department:
-                items = db_handle.read_inv()
-            else:
-                for d in user['docs']:
-                    for i in d['items']:
-                        if i['description'] not in items:
-                            items[i['description']] = i['quantity']
-                        else:
-                            items[i['description']] += i['quantity']
+            items = get_items(user)
             return render_template('pages/sign.html', user=user, data={'items': items, 'id': pid}, users=db_handle.all_users())
     return redirect('/')
 
@@ -222,8 +224,8 @@ def sign_gas():
                         photo = request.files['file']
                 gas.sign(dict(request.form), photo)
                 return redirect('/sign_gas')
-            users = db_handle.all_users()
-            return render_template('gas/sign_gas.html', user=user, users=users)
+            all_users = db_handle.all_users()
+            return render_template('gas/sign_gas.html', user=user, users=all_users)
     return redirect('/')
 
 
@@ -244,10 +246,10 @@ def ret_gas():
                 if not docs:
                     msg = 'לא נמצאו טפסים עבור {}'.format(rf['id'])
             if user['department'] == 'לוגיסטיקה':
-                users = db_handle.all_users()
+                all_users = db_handle.all_users()
             else:
-                users = db_handle.all_users({'department': user['department']})
-            return render_template('gas/return_gas.html', user=user, data={'docs': docs, 'msg': msg}, users=users)
+                all_users = db_handle.all_users({'department': user['department']})
+            return render_template('gas/return_gas.html', user=user, data={'docs': docs, 'msg': msg}, users=all_users)
     return redirect('/')
 
 
@@ -271,10 +273,28 @@ def personal():
     if 'username' in session and 'phone' in session:
         user = db_handle.validate_user(session['username'], session['phone'])
         if user:
+            items = get_items(user)
             if request.form:
-                db_handle.create_user(dict(request.form))
-                all_users = db_handle.all_users({'id': request.form['id']})[0]
-                return render_template('pages/edit_person.html', user=user, users=all_users)
+                rf = dict(request.form)
+                db_handle.create_user(rf)
+                # if 'action' in rf:
+                #     if rf['action'] == 'sign':
+                #         inventory.sign(rf, user)
+                #         docs = db_handle.read_docs({'id': rf['id']})
+                #         if docs:
+                #             msg = 'פיקוד העורף - גדוד ניוד\nהוחתמת על ציוד באופן דיגיטלי.\n'
+                #             send = False
+                #             for doc in docs:
+                #                 for item in doc['items']:
+                #                     msg += '\n{} : {} יח'.format(item['description'], item['quantity'])
+                #                     send = True
+                #             if send:
+                #                 token = ''
+                #                 # todo: gen and save token
+                #                 msg += '\nלאישור לחץ:\n{}sms_sign?id={}&token={}'.format(str(request.host_url), rf['id'], token)
+                #                 # sms.send_sms(msg, [rf['phone']])
+                all_users = users.validate_user(request.values['id'], '', True)
+                return render_template('pages/edit_person.html', user=user, users=all_users, data={'items': items})
             elif 'delete' in request.values:
                 user = users.validate_user(request.values['id'], '', True)
                 if not user['docs']:
@@ -282,11 +302,69 @@ def personal():
                 else:
                     return redirect('/personal')
             elif 'id' in request.values:
-                all_users = users.validate_user(request.values['id'],'',True)
-                return render_template('pages/edit_person.html', user=user, users=all_users)
+                all_users = users.validate_user(request.values['id'], '', True)
+                return render_template('pages/edit_person.html', user=user, users=all_users, data={'items': items})
             all_users = db_handle.all_users()
             return render_template('pages/personal.html', user=user, users=all_users)
     return redirect('/')
+
+
+@app.route('/sms_sign', methods=['GET'])
+def sms_sign():
+    msg = ''
+    if 'id' in request.values:
+        # todo: validate token
+        docs = db_handle.read_docs({'id': request.values['id'], 'sign': False})
+        if docs:
+            db_handle.sign_docs(request.values['id'])
+            msg = 'חתימה התקבלה בהצלחה'
+        else:
+            msg = ''
+    return render_template('pages/sms_sign.html', msg=msg)
+
+
+@app.route('/download', methods=['GET', 'POST'])
+def download():
+    rv = dict(request.values)
+    if rv:
+        if 'csv' in rv:
+            if 'storage' in rv:
+                headers = ['name', 'description', 'quantity', 'note', 'in_stock']
+                query = {'storage': {'$exists': True}}
+                file_name = 'מלאי'
+            else:
+                headers = ['name', 'last_name', 'id', 'department', 'description', 'quantity', 'note']
+                file_name = 'ציוד_מוחתם'
+                query = {'storage': {'$exists': False}}
+            docs = db_handle.read_docs(query)
+            if docs:
+                data = []
+                for d in docs:
+                    info = {}
+                    keys = ['id', 'name', 'last_name', 'department']
+                    for k in keys:
+                        if k in d:
+                            info[k] = d[k]
+                    for i in d['items']:
+                        i.update(info)
+                        data.append(i)
+                file = file_handler.CSV.create_csv('static/csv/{}.csv'.format(file_name), data, headers)
+                return send_from_directory(os.path.dirname(file), os.path.basename(file), as_attachment=True)
+    return '', 204
+
+
+def get_items(user):
+    items = {}
+    if user['department'] == config.admin_department:
+        items = db_handle.read_inv()
+    else:
+        for d in user['docs']:
+            for i in d['items']:
+                if i['description'] not in items:
+                    items[i['description']] = i['quantity']
+                else:
+                    items[i['description']] += i['quantity']
+    return items
 
 
 if __name__ == '__main__':

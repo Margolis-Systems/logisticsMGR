@@ -17,7 +17,9 @@
     </table>
 </body>
 <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+{% if user %}
 <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+{% endif %}
 <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
 </html>
