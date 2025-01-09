@@ -11,7 +11,7 @@ class CSV:
                 if i in headers:
                     new[i] = r[i]
             data.append(new)
-        with open(file_name, 'w', newline='') as f:
+        with open(file_name, 'w', newline='', encoding='utf-8') as f:
             writer = csv.DictWriter(f, headers)
             writer.writeheader()
             for r in data:
