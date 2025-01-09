@@ -1,11 +1,7 @@
 {% extends 'layout/layout.html' %}
 {% block body %}
-<tr><th colspan="5">פעולות: {{users.name}} {{users.last_name}}</th></tr>
+<tr><th colspan="5">{{users.name}} {{users.last_name}}</th></tr>
 <form method="POST" autocomplete="off">
-<tr>
-    <td colspan="2">עריכה:</td>
-    <td colspan="5" class="form-floating"></td>
-</tr>
 <tr>
     <td colspan="2"></td>
     <td colspan="5">
@@ -38,4 +34,20 @@
     <td><button class="btn btn-lg btn-danger" style="width:300px;height:200px;" onclick="location.href='/ret?id={{users.id}}'">זיכוי ציוד</button></td>
     <td colspan="2"><button class="btn btn-lg btn-danger" style="width:300px;height:200px;" onclick="location.href='/ret_gas?id={{users.id}}'">זיכוי דלק</button></td>
 </tr>
+<tr onclick="copy_to_clipboard('copytoclip','{{users.name}} {{users.last_name}}')">
+    <textarea style="display:none" id="copytoclip">{% for doc in user.docs %}{% for l in doc['items'] %}
+{{l.description}} : {{l.quantity}}{% endfor %}{% endfor %}</textarea>
+    <th>פריט</th>
+    <th>כמות חתום</th>
+    <th>הערה</th>
+</tr>
+{% for doc in user.docs %}
+{% for l in doc['items'] %}
+<tr>
+    <td>{{l.description}}</td>
+    <td>{{l.quantity}}</td>
+    <td>{{l.note}}</td>
+</tr>
+{% endfor %}
+{% endfor %}
 {% endblock %}

@@ -242,6 +242,7 @@ def ret_gas():
             if rf:
                 if len(rf.keys()) > 1:
                     gas.ret(dict(request.form))
+                    return redirect('/ret_gas?id={}'.format(rf['id']))
                 docs = db_handle.read_docs({'id': rf['id']}, 'gas')
                 if not docs:
                     msg = 'לא נמצאו טפסים עבור {}'.format(rf['id'])
@@ -370,7 +371,6 @@ def get_items(user):
 
 if __name__ == '__main__':
     # Initialize
-    init(True)
     # Run App
     app.secret_key = '!afD345eW%##$'
     app.run(host="0.0.0.0", port=config.server_port, debug=True)
