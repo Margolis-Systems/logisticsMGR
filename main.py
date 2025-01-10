@@ -1,6 +1,5 @@
-from flask import Flask, render_template, redirect, request, make_response, stream_with_context, Response, session, send_from_directory
+from flask import Flask, render_template, redirect, request, make_response, session, send_from_directory, url_for
 from src import config, db_handler, inventory, sms_handler, gas, users, file_handler
-import secrets
 from datetime import datetime, timedelta
 import os
 
@@ -170,8 +169,7 @@ def sign_storage():
                 rf['storage'] = ''
                 inventory.sign(rf)
                 return redirect('/sign_storage')
-            storages = db_handle.read_list('storage')
-            return render_template('pages/sign_storage.html', user=user, data={'storages': storages})
+            return render_template('pages/sign_storage.html', user=user, data={'storages': [{'name': 'מחסן'}]})
     return redirect('/')
 
 
@@ -194,20 +192,19 @@ def gas_main():
         user = db_handle.validate_user(session['username'], session['phone'])
         if user:
             if user['department'] == 'לוגיסטיקה':
-                gas_store = db_handle.read_docs({'storage': True}, col='gas')
-                docs = db_handle.read_docs({'storage': {'$exists': False}}, col='gas')
-                if gas_store:
-                    gas_store = gas_store[0]
-                    del gas_store['storage']
                 if request.form:
                     rf = dict(request.form)
-                    print('gas main fr', rf)
-                if 'page' in request.values:
-                    page = request.values['page']
-                    if page == 'sign':
-                        return render_template('gas/gas_in.html', user=user, gas_store=gas_store)
-                    elif page == 'ret':
-                        return render_template('gas/gas_out.html', user=user, gas_store=gas_store)
+                    if 'type' in rf:
+                        db_handle.update_one('gas', {'storage': {'$exists': True}}, {'$inc': {'{}.{}'.format(rf['type'], rf['liter']): int(rf['quantity'])}})
+                    else:
+                        for k in rf:
+                            ctype, liter = k.split('|')
+
+                            db_handle.update_one('gas', {'storage': {'$exists': True}}, {'$set': {'{}.{}'.format(ctype, liter): int(rf[k])}})
+                gas_store = dict(db_handle.read_one('gas', {'storage': {'$exists': True}}))
+                docs = db_handle.read_docs({'storage': {'$exists': False}}, col='gas')
+                if gas_store:
+                    del gas_store['storage']
                 return render_template('gas/gas.html', user=user, gas_store=gas_store, docs=docs)
     return redirect('/')
 
@@ -216,16 +213,23 @@ def gas_main():
 def sign_gas():
     if 'username' in session and 'phone' in session:
         user = db_handle.validate_user(session['username'], session['phone'])
+        msg = ''
         if user:
             if request.form:
+                rf = dict(request.form)
                 photo = None
                 if 'file' in request.files:
                     if request.files['file']:
                         photo = request.files['file']
-                gas.sign(dict(request.form), photo)
+                gas.sign(rf, photo)
+                session['msg'] = '{} {} הוחתם בהצלחה'.format(rf['name'], rf['last_name'])
                 return redirect('/sign_gas')
+            elif 'msg' in session:
+                msg = session['msg']
+                del session['msg']
+                session.modified = True
             all_users = db_handle.all_users()
-            return render_template('gas/sign_gas.html', user=user, users=all_users)
+            return render_template('gas/sign_gas.html', user=user, users=all_users, msg=msg)
     return redirect('/')
 
 

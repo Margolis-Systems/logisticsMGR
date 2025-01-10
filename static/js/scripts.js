@@ -26,6 +26,12 @@ function get_info(person_id){
                 }
             }
         }
+        else{
+            sn = document.getElementById('search_name');
+            if (sn){
+                sn.value = data.name + ' ' + data.last_name;
+            }
+        }
     });
 }
 

@@ -6,19 +6,9 @@
         <th colspan="5">החתמה כ. דלק</th>
     </tr>
     <tr>
-        <th colspan="5">פרטי המקבל</th>
-    </tr>
-    <tr>
-        <td colspan="2"><input class="sign_inpt" size="8" type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
         <td colspan="2">
             {% include 'layout/fulname_autocomplete.html' %}
         </td>
-    </tr>
-    <tr>
-        <td colspan="2"><input class="sign_inpt" size="8" name="name" id="name" placeholder="שם פרטי" required></td>
-        <td colspan="2"><input class="sign_inpt" size="8" name="last_name" id="last_name" placeholder="שם משפחה"></td>
-    </tr>
-    <tr>
         <td colspan="5"><input class="sign_inpt" type="number" min="1" id="km" name="km" placeholder="ק''מ רכב"></td>
     </tr>
     <tr>
@@ -52,4 +42,9 @@
         <td colspan="5"><button type="submit" class="btn btn-success btn-lg">אישור</button></td>
     </tr>
 </form>
+<script>
+    {% if msg %}
+    window.alert('{{msg}}');
+    {% endif %}
+</script>
 {% endblock %}

@@ -8,7 +8,7 @@
     <tr><th>סוג</th><th>כמות מוחתם</th><th>כמות לזיכוי</th></tr>
     {% for doc in data.docs %}
     {% for k in doc %}
-    {% if k not in ['id', 'ids', 'name', 'last_name', 'date', 'doc_id', 'sign'] %}
+    {% if k not in ['id', 'ids', 'name', 'last_name', 'date', 'doc_id', 'sign', 'photo'] %}
     {% for l in doc[k] %}
     {% if doc[k][l]['quantity'] > 0 %}
     <tr>
@@ -26,23 +26,16 @@
     </tr>
 </form>
 {% else %}
-    <tr><th>בחר מרשימה</th><th>הזן מס אישי</th></tr>
+<form method="POST">
     <tr>
-        <td>
-            <select class="sign_inpt" name="full_name" id="full_name" onchange="update_id(this.value)">
-                <option style="display:none" value="" selected>בחר חייל</option>
-                {% for u in users %}
-                <option value="{{u.id}}">{{u.name}} {{u.last_name}}</option>
-                {% endfor %}
-            </select>
+        <td colspan="5">
+            {% include 'layout/fulname_autocomplete.html' %}
         </td>
-        <form method="POST">
-        <td colspan="5"><input class="sign_inpt" size="8" type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
-        </form>
     </tr>
     <tr><td colspan="5"><button class="btn btn-success btn-lg">אישור</button> </td> </tr>
     {% if data.msg %}
     <tr><td colspan="5"><label style="color:red;">{{data.msg}}</label></td></tr>
     {% endif %}
+</form>
 {% endif %}
 {% endblock %}

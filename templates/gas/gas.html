@@ -3,23 +3,54 @@
 {% include 'layout/search.html' %}
 <tr><th colspan="5">רשימת מלאי דלק</th></tr>
 {% set ns = namespace(pid="")%}
-<tr><th>סוג</th><th>ליטרים</th><th>כמות</th></tr>
+<tr><th>סוג</th><th>ליטרים</th><th colspan="2">כמות</th></tr>
 {% for item in gas_store %}
 {% set ns.pid='q' %}
 {% for liter in gas_store[item] %}
-<tr><td>{{item}}</td><td>{{liter}}</td><td>{{gas_store[item][liter]['quantity']}}</td></tr>
+<form method="POST" name="update">
+<tr><td>{{item}}</td><td>{{liter}}</td><td colspan="2"><input class="gsign_inpt" name="{{item}}|{{liter}}" value="{{gas_store[item][liter]}}"></td></tr>
 {% endfor %}
 {% endfor %}
+{% if gas_store %}
+<tr><td colspan="5"><button class="btn btn-success btn-lg">עדכן</button></td></tr>
+{% endif %}
+</form>
+<tr><td colspan="5"></td></tr>
+<form method="POST" name="add">
 <tr>
-    <td><button class="btn btn-success btn-lg" onclick="location.href='/gas?page=sign'">חתימה למחסן</button></td>
-    <td colspan="2"><button class="btn btn-danger btn-lg" onclick="location.href='/gas?page=ret'">זיכוי מחסן</button></td>
+    <td>
+        <select class="sign_inpt" name="type" required>
+            <option style="display:none" value="" selected>בחר סוג</option>
+            <option value="בנזין">בנזין</option>
+            <option value="סולר">סולר</option>
+            <option value="אוריאה">אוריאה</option>
+        </select>
+    </td>
+    <td>
+        <select class="gsign_inpt" id="liter" name="liter" required>
+            <option style="display:none;" value="" selected>ליטרים</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
+        </select>
+    </td>
+    <td>
+        <input class="gsign_inpt" type="number" min="1" id="quantity" name="quantity" placeholder="כמות" required>
+    </td>
 </tr>
+<tr>
+    <td colspan="5"><button class="btn btn-success btn-lg">הוסף</button></td>
+</tr>
+</form>
+{% if docs %}
+<tr><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+{% endif %}
 {% for doc in docs %}
 {% for k in doc %}
 {% if k not in ['id', 'ids', 'name', 'last_name', 'date', 'doc_id', 'sign'] %}
 {% for l in doc[k] %}
 <tr>
-    <td><button>זיכוי</button> {{doc['name']}} {{doc['last_name']}}</td><td>{{k}} {{l}}</td><td>{{doc[k][l]['quantity']}}</td>
+    <td><button onclick="location.href='/ret_gas?id={{doc['id']}}'">זיכוי</button> {{doc['name']}} {{doc['last_name']}}</td><td>{{k}} {{l}}</td><td>{{doc[k][l]['quantity']}}</td>
 </tr>
 {% endfor %}
 {% endif %}
