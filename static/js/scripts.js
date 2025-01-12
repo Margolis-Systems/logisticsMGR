@@ -165,3 +165,6 @@ function copy_to_clipboard(element_id, name) {
   alert("רשימת ציוד של "+name+" הועתקה: ");
 }
 
+if (typeof onload_id !== 'undefined'){
+    update_id(onload_id)
+}

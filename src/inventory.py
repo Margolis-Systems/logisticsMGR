@@ -51,7 +51,7 @@ def sign(dic, from_user=None):
 def ret(dic, storage=False):
     for k in dic:
         pid = dic['id']
-        if k == 'id':
+        if k in ['id', 'name', 'last_name']:
             continue
         elif dic[k]:
             date, description, idx = k.split('|')

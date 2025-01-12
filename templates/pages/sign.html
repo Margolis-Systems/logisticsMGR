@@ -2,6 +2,7 @@
 {% block body %}
 <form method="POST" action="/sign" autocomplete="off">
     <input type="hidden" name="add_new" id="add_new" value="false">
+    <input type="hidden" name="valid" value="{{valid}}">
     <tr>
         <th colspan="5">החתמה על ציוד</th>
     </tr>
@@ -40,6 +41,9 @@
     {% endfor %}
 </datalist>
 <script>
+    {% if msg %}
+    window.alert('{{msg}}');
+    {% endif %}
     var items = {{data|tojson|safe}}.items;
     {% if data.id %}
     var pid = {{data.id}};

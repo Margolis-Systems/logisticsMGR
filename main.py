@@ -105,32 +105,45 @@ def inv():
 
 @app.route('/sign', methods=['POST', 'GET'])
 def sign():
+    msg = ''
     if 'username' in session and 'phone' in session:
         user = db_handle.validate_user(session['username'], session['phone'])
         if user:
             pid = ''
             if request.form:
                 rf = dict(request.form)
-                inventory.sign(rf, user)
-                docs = db_handle.read_docs({'id': rf['id'], 'sign': False})
-                if docs:
-                    msg = 'הר ציון - גדוד צפון - לוגיסטיקה\n\nהנך חתומ.ה על הציוד:\n'
-                    send = False
-                    for doc in docs:
-                        for item in doc['items']:
-                            msg += "\n{} : {} יח'".format(item['description'], item['quantity'])
-                            send = True
-                    if send:
-                        token = ''
-                        # todo: gen and save token
-                        msg += '\n\nלאישור לחץ:\n{}sms_sign?id={}&token={}'.format(str(request.host_url), rf['id'], token)
-                        # sms.send_sms(msg, [rf['phone']])
+                if 'valid' in session:
+                    if rf['valid'] == session['valid'] and session['valid'] != '':
+                        del rf['valid']
+                        inventory.sign(rf, user)
+                        session['valid'] = ''
+                        session['msg'] = '{} {} הוחתם בהצלחה'.format(rf['name'], rf['last_name'])
+                        session.modified = True
+                        docs = db_handle.read_docs({'id': rf['id'], 'sign': False})
+                        if docs:
+                            msg = 'הר ציון - גדוד צפון - לוגיסטיקה\n\nהנך חתומ.ה על הציוד:\n'
+                            send = False
+                            for doc in docs:
+                                for item in doc['items']:
+                                    msg += "\n{} : {} יח'".format(item['description'], item['quantity'])
+                                    send = True
+                            if send:
+                                token = ''
+                                # todo: gen and save token
+                                msg += '\n\nלאישור לחץ:\n{}sms_sign?id={}&token={}'.format(str(request.host_url), rf['id'], token)
+                                sms.send_sms(msg, [rf['phone']])
                 return redirect('/sign')
             elif request.values:
                 if 'id' in request.values:
                     pid = request.values['id']
             items = get_items(user)
-            return render_template('pages/sign.html', user=user, data={'items': items, 'id': pid}, users=db_handle.all_users())
+            session['valid'] = datetime.now().strftime('%d-%m-%Y_%H-%M-%S')
+            if 'msg' in session:
+                msg = session['msg']
+                session['msg'] = ''
+            session.modified = True
+            return render_template('pages/sign.html', user=user, data={'items': items, 'id': pid},
+                                   users=db_handle.all_users(), valid=session['valid'], msg=msg)
     return redirect('/')
 
 
@@ -146,16 +159,31 @@ def ret():
                 rf = dict(request.values)
             if rf:
                 if 'ret' in rf:
-                    inventory.ret(rf)
+                    if 'valid' in session:
+                        if rf['valid'] == session['valid'] and session['valid'] != '':
+                            session['valid'] = ''
+                            session.modified = True
+                            del rf['valid']
+                            inventory.ret(rf)
+                            session['msg'] = '{} {} זוכה בהצלחה'.format(rf['name'], rf['last_name'])
+                            return redirect('/ret?id={}'.format(rf['id']))
                 if 'id' in rf:
                     docs = db_handle.read_docs({'id': rf['id']})
                     if not docs:
                         msg = 'לא נמצאו טפסים עבור {}'.format(rf['id'])
                     else:
-                        docs.reverse()
+                        for doc in docs:
+                            doc['items'].reverse()
                 else:
-                    docs['msg'] = 'ERROR'
-            return render_template('pages/return.html', user=user, data={'docs': docs, 'msg': msg}, users=db_handle.all_users())
+                    msg = 'ERROR'
+            session['valid'] = datetime.now().strftime('%d-%m-%Y_%H-%M-%S')
+            if 'msg' in session:
+                if session['msg']:
+                    msg = session['msg']
+                session['msg'] = ''
+            session.modified = True
+            return render_template('pages/return.html', user=user, data={'docs': docs},
+                                   users=db_handle.all_users(), valid=session['valid'], msg=msg)
     return redirect('/')
 
 
@@ -221,7 +249,7 @@ def sign_gas():
                 if 'file' in request.files:
                     if request.files['file']:
                         photo = request.files['file']
-                gas.sign(rf, photo)
+                gas.sign(rf, user, photo)
                 session['msg'] = '{} {} הוחתם בהצלחה'.format(rf['name'], rf['last_name'])
                 return redirect('/sign_gas')
             elif 'msg' in session:
@@ -229,6 +257,10 @@ def sign_gas():
                 del session['msg']
                 session.modified = True
             all_users = db_handle.all_users()
+            if 'id' in request.values:
+                pid = request.values['id']
+            else:
+                pid = ''
             if user['department'] == config.admin_department:
                 gas_store = dict(db_handle.read_one('gas', {'storage': {'$exists': True}}))
                 if gas_store:
@@ -245,7 +277,7 @@ def sign_gas():
                                 if li not in gas_store[k]:
                                     gas_store[k][li] = 0
                                 gas_store[k][li] += i[k][li]['quantity']
-            return render_template('gas/sign_gas.html', user=user, users=all_users, msg=msg, gas_store=gas_store)
+            return render_template('gas/sign_gas.html', user=user, users=all_users, msg=msg, gas_store=gas_store, pid=pid)
     return redirect('/')
 
 
@@ -261,7 +293,7 @@ def ret_gas():
                 rf = dict(request.values)
             if rf:
                 if len(rf.keys()) > 1:
-                    gas.ret(dict(request.form))
+                    gas.ret(dict(request.form), user)
                     return redirect('/ret_gas?id={}'.format(rf['id']))
                 docs = db_handle.read_docs({'id': rf['id']}, 'gas')
                 if not docs:
@@ -377,7 +409,6 @@ def download():
 
 def get_items(user):
     items = {}
-    print(user)
     if user['department'] == config.admin_department:
         items = db_handle.read_inv()
     else:
@@ -387,7 +418,6 @@ def get_items(user):
                     items[i['description']] = i['quantity']
                 else:
                     items[i['description']] += i['quantity']
-    print(items)
     return items
 
 

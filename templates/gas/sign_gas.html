@@ -47,5 +47,8 @@
     window.alert('{{msg}}');
     {% endif %}
     var gas_store = {{gas_store|tojson|safe}}
+    {% if pid %}
+    onload_id = {{pid}}
+    {% endif %}
 </script>
 {% endblock %}

@@ -8,7 +8,7 @@
     <tr><th>סוג</th><th>כמות מוחתם</th><th>כמות לזיכוי</th></tr>
     {% for doc in data.docs %}
     {% for k in doc %}
-    {% if k not in ['id', 'ids', 'name', 'last_name', 'date', 'doc_id', 'sign', 'photo'] %}
+    {% if k not in ['id', 'ids', 'name', 'last_name', 'date', 'doc_id', 'sign', 'photo', 'from'] %}
     {% for l in doc[k] %}
     {% if doc[k][l]['quantity'] > 0 %}
     <tr>

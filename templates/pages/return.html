@@ -5,7 +5,10 @@
 <form method="POST">
     <tr><td colspan="5">{{data.docs[0].id}} {{data.docs[0].name}} {{data.docs[0].last_name}}</td></tr>
     <input type="hidden" name="id" value="{{data.docs[0].id}}">
+    <input type="hidden" name="name" value="{{data.docs[0].name}}">
+    <input type="hidden" name="last_name" value="{{data.docs[0].last_name}}">
     <input type="hidden" name="ret">
+    <input type="hidden" name="valid" value="{{valid}}">
     <tr>
         <th>פריט</th>
         <th>כמות חתום</th>
@@ -40,4 +43,9 @@
     <tr><td colspan="5"><label style="color:red;">{{data.msg}}</label></td></tr>
     {% endif %}
 {% endif %}
+<script>
+    {% if msg %}
+    window.alert('{{msg}}');
+    {% endif %}
+</script>
 {% endblock %}
