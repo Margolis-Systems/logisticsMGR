@@ -16,14 +16,14 @@
     </tr>
     <tr>
         <td>
-            <select class="sign_inpt" name="type" required>
+            <select class="sign_inpt" id="type" name="type" onchange="update_gas_max()" required>
                 <option style="display:none" value="" selected>בחר סוג</option>
                 <option value="בנזין">בנזין</option>
                 <option value="סולר">סולר</option>
             </select>
         </td>
         <td>
-            <select class="gsign_inpt" id="liter" name="liter" required>
+            <select class="gsign_inpt" id="liter" name="liter" onchange="update_gas_max()" required>
                 <option style="display:none;" value="" selected>ליטרים</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
@@ -46,5 +46,6 @@
     {% if msg %}
     window.alert('{{msg}}');
     {% endif %}
+    var gas_store = {{gas_store|tojson|safe}}
 </script>
 {% endblock %}

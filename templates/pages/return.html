@@ -5,6 +5,7 @@
 <form method="POST">
     <tr><td colspan="5">{{data.docs[0].id}} {{data.docs[0].name}} {{data.docs[0].last_name}}</td></tr>
     <input type="hidden" name="id" value="{{data.docs[0].id}}">
+    <input type="hidden" name="ret">
     <tr>
         <th>פריט</th>
         <th>כמות חתום</th>
@@ -29,15 +30,9 @@
     <tr><th>בחר מרשימה</th><th>הזן מס אישי</th></tr>
     <form method="POST">
     <tr>
-        <td>
-            <select class="sign_inpt" name="full_name" id="full_name" onchange="update_id(this.value)">
-                <option style="display:none" value="" selected>בחר חייל</option>
-                {% for u in users %}
-                <option value="{{u.id}}">{{u.name}} {{u.last_name}}</option>
-                {% endfor %}
-            </select>
+        <td colspan="5">
+            {% include 'layout/fulname_autocomplete.html' %}
         </td>
-        <td colspan="5"><input class="sign_inpt" size="8" type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
     </tr>
     <tr><td colspan="5"><button class="btn btn-success btn-lg">אישור</button> </td> </tr>
     </form>

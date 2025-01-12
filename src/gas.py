@@ -20,8 +20,14 @@ def sign(dic, photo=None):
         filename = 'static/img/gas/{}.jpeg'.format(doc_id)
         photo.save(filename)
     doc[dic['type']] = {dic['liter']: {'quantity': qnt}}
+    user = main.users.validate_user(main.session['username'], main.session['phone'])
+    if user['department'] == main.config.admin_department:
+        doc['from'] = {'storage': 'gas'}
+    else:
+        doc['from'] = {}
+        for k in ['id', 'name', 'last_name', 'rank', 'department', 'phone']:
+            doc['from'][k] = user[k]
     main.db_handle.write_doc(doc, 'gas')
-    # todo update inv
 
 
 def ret(dic):

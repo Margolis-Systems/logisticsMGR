@@ -145,7 +145,7 @@ def ret():
             if not rf and request.values:
                 rf = dict(request.values)
             if rf:
-                if len(rf.keys()) > 1:
+                if 'ret' in rf:
                     inventory.ret(rf)
                 if 'id' in rf:
                     docs = db_handle.read_docs({'id': rf['id']})
@@ -229,7 +229,23 @@ def sign_gas():
                 del session['msg']
                 session.modified = True
             all_users = db_handle.all_users()
-            return render_template('gas/sign_gas.html', user=user, users=all_users, msg=msg)
+            if user['department'] == config.admin_department:
+                gas_store = dict(db_handle.read_one('gas', {'storage': {'$exists': True}}))
+                if gas_store:
+                    del gas_store['storage']
+            else:
+                gas_store = {}
+                temp = db_handle.read('gas', {'id': session['username']})
+                for i in temp:
+                    for k in i:
+                        if isinstance(i[k], dict):
+                            if k not in gas_store:
+                                gas_store[k] = {}
+                            for li in i[k]:
+                                if li not in gas_store[k]:
+                                    gas_store[k][li] = 0
+                                gas_store[k][li] += i[k][li]['quantity']
+            return render_template('gas/sign_gas.html', user=user, users=all_users, msg=msg, gas_store=gas_store)
     return redirect('/')
 
 
@@ -361,6 +377,7 @@ def download():
 
 def get_items(user):
     items = {}
+    print(user)
     if user['department'] == config.admin_department:
         items = db_handle.read_inv()
     else:
@@ -370,6 +387,7 @@ def get_items(user):
                     items[i['description']] = i['quantity']
                 else:
                     items[i['description']] += i['quantity']
+    print(items)
     return items
 
 

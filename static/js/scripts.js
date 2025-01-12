@@ -3,7 +3,7 @@ const openNewWindow = (editorUrl) => {
     newWindow = window.open(editorUrl, 'sub', params);
 };
 
-function get_info(person_id){
+function get_info(person_id,docs=''){
     var data
     trig = true
     $.getJSON('/get_info?id='+person_id, function(data) {
@@ -14,6 +14,9 @@ function get_info(person_id){
             if (elem){
                 elem.value = data[k];
             }
+        }
+        if (data.hasOwnProperty(docs)){
+            console.log(data.docs)
         }
         if (trig){
             an = document.getElementById('add_new');
@@ -89,7 +92,7 @@ function close(){
     }
 }
 
-function  gas_qnty(){
+function  _gas_qnty(){
     start_s = document.getElementById('serial_s').value;
     end_s = document.getElementById('serial_e').value;
     length = end_s.length;
@@ -97,6 +100,21 @@ function  gas_qnty(){
         if (start_s.length < end_s.length){length = start_s.length}
         qnt = parseInt(end_s.substring(0,length)) - parseInt(start_s.substring(0,length)) + 1;
         document.getElementById('quantity').value = qnt;
+    }
+}
+
+function update_gas_max(){
+    ctype = document.getElementById('type')
+    liters = document.getElementById('liter')
+    if (ctype && liters){
+        max = gas_store[ctype.value][liters.value];
+        if (!max){
+            max = 0;
+            if (ctype.value && liters.value){
+                alert('כרטיס לא במלאי')
+            }
+        }
+        document.getElementById('quantity').setAttribute('max', max);
     }
 }
 
@@ -146,3 +164,4 @@ function copy_to_clipboard(element_id, name) {
   navigator.clipboard.writeText(copyText.innerHTML);
   alert("רשימת ציוד של "+name+" הועתקה: ");
 }
+
