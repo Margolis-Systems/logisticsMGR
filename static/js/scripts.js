@@ -112,14 +112,23 @@ function update_gas_max(){
     ctype = document.getElementById('type')
     liters = document.getElementById('liter')
     if (ctype && liters){
-        max = gas_store[ctype.value][liters.value];
-        if (!max){
+        if (ctype.value && liters.value){
             max = 0;
-            if (ctype.value && liters.value){
-                alert('כרטיס לא במלאי')
+            if (gas_store.hasOwnProperty(ctype.value)){
+                max = gas_store[ctype.value][liters.value];
             }
+            if (!max){
+                    alert('כרטיס לא במלאי')
+                    lit = document.getElementById('liter');
+                    if(lit){
+                        lit = lit.options;
+                        for(var i = 0; i < lit.length; i++){
+                            lit[i].selected = false;
+                        }
+                    }
+            }
+            document.getElementById('quantity').setAttribute('max', max);
         }
-        document.getElementById('quantity').setAttribute('max', max);
     }
 }
 

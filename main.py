@@ -227,8 +227,12 @@ def gas_main():
                     else:
                         for k in rf:
                             ctype, liter = k.split('|')
-
-                            db_handle.update_one('gas', {'storage': {'$exists': True}}, {'$set': {'{}.{}'.format(ctype, liter): int(rf[k])}})
+                            # if int(rf[k]) > 0:
+                            db_handle.update_one('gas', {'storage': {'$exists': True}},
+                                                 {'$set': {'{}.{}'.format(ctype, liter): int(rf[k])}})
+                            # else:
+                            #     db_handle.update_one('gas', {'storage': {'$exists': True}},
+                            #                          {'$unset': {'{}.{}'.format(ctype, liter): int(rf[k])}})
                 gas_store = dict(db_handle.read_one('gas', {'storage': {'$exists': True}}))
                 docs = db_handle.read_docs({'storage': {'$exists': False}}, col='gas')
                 if gas_store:

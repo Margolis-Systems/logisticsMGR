@@ -47,7 +47,7 @@
 {% endif %}
 {% for doc in docs %}
 {% for k in doc %}
-{% if k not in ['id', 'ids', 'name', 'last_name', 'date', 'doc_id', 'sign', 'from', 'photo'] %}
+{% if k in ['בנזין', 'סולר', 'אוריאה'] %}
 {% for l in doc[k] %}
 <tr>
     <td><button onclick="location.href='/ret_gas?id={{doc['id']}}'">זיכוי</button> {{doc['name']}} {{doc['last_name']}}</td><td>{{k}} {{l}}</td><td>{{doc[k][l]['quantity']}}</td>

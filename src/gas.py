@@ -49,12 +49,14 @@ def ret(dic, user):
         if '|' in k:
             if dic[k]:
                 ctype, litters, doc_id = k.split('|')
-                quantity = -int(dic[k])
+                quantity = int(dic[k])
                 to_update = main.db_handle.read_one('gas', {'id': pid, 'doc_id': doc_id})
                 if not to_update:
                     return
                 if int(to_update[ctype][litters]['quantity']) <= quantity:
                     del to_update[ctype][litters]
+                    if not to_update[ctype]:
+                        del to_update[ctype]
                 else:
                     to_update[ctype][litters]['quantity'] = int(to_update[ctype][litters]['quantity']) - quantity
                 if 'בנזין' not in to_update and 'סולר' not in to_update and 'אוריאה' not in to_update:
