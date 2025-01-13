@@ -27,10 +27,12 @@ def sign(dic, user, photo=None):
         doc['from'] = {}
         for k in ['id', 'name', 'last_name', 'rank', 'department', 'phone']:
             doc['from'][k] = user[k]
-        temp = main.db_handle.read('gas', {'id': user['id'], '{}.{}'.format(dic['type'], dic['liter']): {'$exists': True}})
+        temp = main.db_handle.read('gas',
+                                   {'id': user['id'], '{}.{}'.format(dic['type'], dic['liter']): {'$exists': True}})
         for i in temp:
             if qnt <= i[dic['type']][dic['liter']]['quantity']:
-                main.db_handle.update_one('gas', {'id': user['id'], 'doc_id': '12-01-2025_12-21-08', '{}.{}'.format(dic['type'], dic['liter']): {'$exists': True}},
+                main.db_handle.update_one('gas', {'id': user['id'], 'doc_id': '12-01-2025_12-21-08',
+                                                  '{}.{}'.format(dic['type'], dic['liter']): {'$exists': True}},
                                           {'$inc': {'{}.{}.quantity'.format(dic['type'], dic['liter']): -qnt}})
                 break
             else:
@@ -48,8 +50,19 @@ def ret(dic, user):
             if dic[k]:
                 ctype, litters, doc_id = k.split('|')
                 quantity = -int(dic[k])
-                main.db_handle.update_one('gas', {'id': pid, 'doc_id': doc_id},
-                                          {'$inc': {'{}.{}.quantity'.format(ctype, litters): -quantity}})
+                to_update = main.db_handle.read_one('gas', {'id': pid, 'doc_id': doc_id})
+                if not to_update:
+                    return
+                if int(to_update[ctype][litters]['quantity']) <= quantity:
+                    del to_update[ctype][litters]
+                else:
+                    to_update[ctype][litters]['quantity'] = int(to_update[ctype][litters]['quantity']) - quantity
+                if 'בנזין' not in to_update and 'סולר' not in to_update and 'אוריאה' not in to_update:
+                    main.db_handle.delete_one('gas', {'id': pid, 'doc_id': doc_id})
+                else:
+                    main.db_handle.update_one('gas', {'id': pid, 'doc_id': doc_id},
+                                              {'$inc': {'{}.{}.quantity'.format(ctype, litters): -quantity}})
+
                 main.db_handle.update_one('gas', {'storage': {'$exists': True}},
                                           {'$inc': {'{}.{}'.format(ctype, litters): quantity}})
                 if user['department'] != main.config.admin_department:

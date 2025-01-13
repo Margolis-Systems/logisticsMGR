@@ -11,7 +11,7 @@
             {% include 'layout/fulname_autocomplete.html' %}
         </td>
     </tr>
-    <tr>
+    <tr class="need_id">
         <th>שם</th>
         <th>כמות</th>
         <th>הערה</th>
@@ -20,7 +20,7 @@
     {% if i > 2 %}
     <tr style="display:none;" id="row{{loop.index0}}">
     {% else %}
-    <tr id="row{{loop.index0}}">
+    <tr id="row{{loop.index0}}" class="need_id">
     {% endif %}
         <td>
             <input class="sign_inpt" list="prod" size="8" name="item{{loop.index0}}" id="item{{loop.index0}}" onchange="add_required('quantity{{loop.index0}}', this.value)" placeholder="שם פריט" {% if loop.index0==0 %}required{% endif %}>
@@ -29,7 +29,7 @@
         <td><input class="sign_inpt" size="10" name="note{{loop.index0}}" placeholder="הערה"></td>
     </tr>
     {% endfor %}
-    <tr>
+    <tr class="need_id">
         <td><button type="submit" class="btn btn-success btn-lg">אישור</button></td>
         <td></td>
         <td><button type="button" onclick="add_row()" class="btn btn-primary btn-lg">+שורה</button></td>

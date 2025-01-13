@@ -34,6 +34,11 @@ function get_info(person_id,docs=''){
             if (sn){
                 sn.value = data.name + ' ' + data.last_name;
             }
+            elems = document.getElementsByClassName('need_id');
+            for (let e = 0; e < elems.length; e++){
+            console.log(elems[e])
+               elems[e].style.display = 'table-row';
+            }
         }
     });
 }
