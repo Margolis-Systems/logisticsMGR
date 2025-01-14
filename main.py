@@ -77,8 +77,8 @@ def get_info():
     if 'username' in session and 'phone' in session:
         user = db_handle.validate_user(session['username'], session['phone'])
         if user:
-            if user['department'] == config.admin_department:
-                return db_handle.validate_user(request.values['id'], '', True)
+            # if user['department'] == config.admin_department:
+            return db_handle.validate_user(request.values['id'], '', True)
     return {}
 
 
@@ -274,12 +274,13 @@ def sign_gas():
                 temp = db_handle.read('gas', {'id': session['username']})
                 for i in temp:
                     for k in i:
-                        if isinstance(i[k], dict):
+                        if isinstance(i[k], dict) and k != 'from':
                             if k not in gas_store:
                                 gas_store[k] = {}
                             for li in i[k]:
                                 if li not in gas_store[k]:
                                     gas_store[k][li] = 0
+                                print(k, li)
                                 gas_store[k][li] += i[k][li]['quantity']
             return render_template('gas/sign_gas.html', user=user, users=all_users, msg=msg, gas_store=gas_store, pid=pid)
     return redirect('/')

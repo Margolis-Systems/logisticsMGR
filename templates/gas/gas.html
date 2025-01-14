@@ -1,6 +1,5 @@
 {% extends 'layout/layout.html' %}
 {% block body %}
-{% include 'layout/search.html' %}
 <tr><th colspan="5">רשימת מלאי דלק</th></tr>
 {% set ns = namespace(pid="")%}
 <tr><th>סוג</th><th>ליטרים</th><th colspan="2">כמות</th></tr>
@@ -51,7 +50,7 @@
 {% for l in doc[k] %}
 <tr>
     <td><button onclick="location.href='/ret_gas?id={{doc['id']}}'">זיכוי</button> {{doc['name']}} {{doc['last_name']}}</td><td>{{k}} {{l}}</td><td>{{doc[k][l]['quantity']}}</td>
-    <td><button onclick="location.href='/ret_gas?id={{doc['id']}}'">פתח</button></td>
+    <td>{% if doc.photo %}<button onclick="location.href='/static/img/gas/{{doc.photo}}.jpeg'">פתח</button>{% endif %}</td>
 </tr>
 {% endfor %}
 {% endif %}

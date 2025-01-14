@@ -5,7 +5,7 @@
 <form method="POST">
     <tr><td colspan="5">{{data.docs[0].id}} {{data.docs[0].name}} {{data.docs[0].last_name}}</td></tr>
     <input type="hidden" name="id" value="{{data.docs[0].id}}">
-    <tr><th>סוג</th><th>כמות מוחתם</th><th>כמות לזיכוי</th></tr>
+    <tr><th>סוג</th><th>כמות מוחתם</th><th>כמות לזיכוי</th><th>תמונה</th></tr>
     {% for doc in data.docs %}
     {% for k in doc %}
     {% if k in ['בנזין', 'סולר', 'אוריאה'] %}
@@ -13,6 +13,7 @@
     {% if doc[k][l]['quantity'] > 0 %}
     <tr>
         <td>{{k}} {{l}}</td><td>{{doc[k][l]['quantity']}}</td><td><input min="1" max="{{doc[k][l]['quantity']}}" class="sign_inpt" type="number" name="{{k}}|{{l}}|{{doc.doc_id}}" placeholder="כמות לזיכוי"></td>
+        <td>{% if doc.photo %}<button type="button" onclick="location.href='/static/img/gas/{{doc.photo}}.jpeg'">פתח</button>{% endif %}</td>
     </tr>
     {% endif %}
     {% endfor %}
@@ -21,7 +22,7 @@
     {% endfor %}
     <tr>
         <td><button type="submit" class="btn btn-lg btn-success">אישור</button> </td>
-        <td></td>
+        <td colspan="2"></td>
         <td><button type="button" class="btn btn-lg btn-danger" onclick="location.href='/ret_gas'">חזור</button> </td>
     </tr>
 </form>
