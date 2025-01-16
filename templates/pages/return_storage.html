@@ -8,12 +8,12 @@
     <input type="hidden" name="id" value="{{data.docs[0].id}}">
     {% for doc in data.docs %}
     <tr><th>{{doc.name}}</th><th colspan="2">יחידה מספקת : {{doc.from.name}}</th></tr>
-    {% for l in doc['items'] %}
     <tr><th>פריט</th><th>מלאי</th><th>זיכוי</th></tr>
+    {% for l in doc['items'] %}
     <tr>
         <td>{{l.description}}</td>
         <td>{{l.quantity}}</td>
-        <td><input type="number" name="{{doc.date}}|{{l.description}}|{{loop.index0}}" min="1" max="{{l.quantity}}" placeholder="כמות לזיכוי"></td>
+        <td><input class="sign_inpt" type="number" name="{{doc.date}}|{{l.description}}|{{loop.index0}}" min="1" max="{{l.quantity}}" placeholder="כמות לזיכוי"></td>
     </tr>
     {% endfor %}
     {% endfor %}

@@ -6,7 +6,7 @@
     </tr>
     <tr>
         <td colspan="5">
-            <select name="storage" id="storage" required>
+            <select class="sign_inpt" style="width:350px!important;" name="storage" id="storage" required>
                 <option style="display:none" value="" selected>בחר מחסן מקבל</option>
                 {% for s in data['storages'] %}
                 <option value="{{s['name']}}">{{s['name']}}</option>
@@ -15,24 +15,20 @@
         </td>
     </tr>
     <tr>
-        <th colspan="5">פרטי יחידה מספקת</th>
+        <th colspan="5">פרטי חייל מספק</th>
     </tr>
     <tr>
-        <td colspan="5"><input class="sign_inpt" size="8" type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
+        <td colspan="2"><input class="sign_inpt" size="8" type="number" name="id" id="id" placeholder="מספר אישי" onchange="get_info(this.value)" required autofocus></td>
+        <td colspan="5">{% include 'layout/fulname_autocomplete_no-req.html' %}</td>
     </tr>
     <tr>
         <td colspan="2"><input class="sign_inpt" size="8" name="name" id="name" placeholder="שם פרטי" required></td>
         <td colspan="5"><input class="sign_inpt" size="8" name="last_name" id="last_name" placeholder="שם משפחה"></td>
     </tr>
-    <tr>
-        <td colspan="2"><input class="sign_inpt" size="8" name="department" id="department" placeholder="מחלקה"></td>
-        <td colspan="5"><input class="sign_inpt" size="8" name="rank" id="rank" placeholder="דרגה"></td>
-    </tr>
-    <tr>
-        <td colspan="2"><input class="sign_inpt" size="8" type="number" name="phone" id="phone" placeholder="טלפון"></td>
-        <td colspan="5"><input class="sign_inpt" size="8" type="number" name="car_plate" id="car_plate" placeholder="מס רכב"></td>
-        <td></td>
-    </tr>
+    <input type="hidden" class="sign_inpt" size="8" name="department" id="department" placeholder="מחלקה">
+    <input type="hidden" class="sign_inpt" size="8" name="rank" id="rank" placeholder="דרגה">
+    <input type="hidden" class="sign_inpt" size="8" name="phone" id="phone" placeholder="טלפון">
+    <input type="hidden" class="sign_inpt" size="8" name="car_plate" id="car_plate" placeholder="מס רכב">
     <tr>
         <th>שם</th>
         <th>כמות</th>
@@ -45,18 +41,23 @@
     <tr id="row{{loop.index0}}">
     {% endif %}
         <td>
-            <input class="sign_inpt" size="8" name="item{{loop.index0}}" id="item{{loop.index0}}" onchange="add_required('quantity{{loop.index0}}', this.value)" placeholder="שם פריט" {% if loop.index0==0 %}required{% endif %}>
+            <input class="sign_inpt" list="prod" size="8" name="item{{loop.index0}}" id="item{{loop.index0}}" onchange="add_required('quantity{{loop.index0}}', this.value, false)" placeholder="שם פריט" {% if loop.index0==0 %}required{% endif %}>
         </td>
         <td><input class="sign_inpt" size="2" type="number" name="quantity{{loop.index0}}" id="quantity{{loop.index0}}" placeholder="כמות"></td>
         <td><input class="sign_inpt" size="10" name="note{{loop.index0}}" placeholder="הערה"></td>
     </tr>
     {% endfor %}
     <tr>
-        <td><button type="submit" class="btn btn-success btn-lg">אישור</button></td>
+        <td><button type="submit" style="width:250px;height:200px;" class="btn btn-success btn-lg">אישור</button></td>
         <td></td>
-        <td><button type="button" onclick="add_row()" class="btn btn-primary btn-lg">+ הוסף שורה</button></td>
+        <td><button type="button" style="width:250px;height:200px;font-size:60px;" onclick="add_row()" class="btn btn-primary btn-lg">+ הוסף שורה</button></td>
     </tr>
 </form>
+<datalist id="prod">
+    {% for i in data['items'] %}
+    <option value="{{i}}">{{i}}</option>
+    {% endfor %}
+</datalist>
 <script>
     var items = {{data|tojson|safe}}.items;
 </script>

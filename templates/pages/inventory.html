@@ -3,23 +3,28 @@
 {% include 'layout/search.html' %}
 <tr><th colspan="5">מלאי מחסן</th></tr>
 <tr>
-<th><button class="btn btn-warning btn-lg" onclick="location.href='/download?csv=&storage='">יצוא</button> </th>
-<th colspan="10">מלאי נוכחי</th>
+<td><button class="btn btn-warning btn-lg" onclick="location.href='/download?csv=&storage='">יצוא</button> </td>
+<td colspan="2"><button class="btn btn-success btn-lg" style="font-size:50px;height:120px;" onclick="location.href='/sign_storage'">החתמת מחסן</button> </td>
+<td><button class="btn btn-danger btn-lg" onclick="location.href='/ret_storage'">זיכוי מחסן</button> </td>
 </tr>
 <tr>
-    <th>שם פריט</th>
-    <th>כמות</th>
-    <th colspan="2"></th>
+    <th>פריט</th>
+    <th>מלאי</th>
+    <th>נופק</th>
+    <th>הערה</th>
 </tr>
 {% for i in data['inv']['actual'] %}
 {% if data['inv']['actual'][i] > 0 %}
 {% endif %}
 <tr dir="ltr">
     <td>{{i}}</td>
-    {% if not data['inv']['total'][i] %}
+    <td>{{data['inv']['total'][i]}}</td>
+    {% if data['inv']['total'][i] %}
+    <td>{{data['inv']['total'][i]-data['inv']['actual'][i]}}</td>
+    {% else %}
+    <td>{{-data['inv']['actual'][i]}}</td>
     {% endif %}
-    <td>{{data['inv']['actual'][i]}}/{{data['inv']['total'][i]}}</td>
-    <td colspan="2"></td>
+    <td></td>
 </tr>
 <!--endif-->
 {% endfor %}
@@ -28,7 +33,7 @@
 </tr>
 {% for doc in data['docs'] %}
 <tr>
-    <th colspan="3"><button type="button" onclick="location.href='/ret_storage'">זיכוי</button>יחידה מספקת: {{doc['from']['name']}}</th>
+    <th colspan="3">יחידה מספקת: {{doc['from']['name']}}</th>
     <th>{{doc['date'].strftime('%d-%m-%Y %H:%M')}} </th>
 </tr>
 {% for item in doc['items'] %}

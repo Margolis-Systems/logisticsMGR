@@ -99,6 +99,12 @@ def inv():
                                 all_inv['total'][item['description']] += int(item['quantity'])
                     return render_template('pages/inventory.html', user=user, data={'inv': all_inv, 'docs': docs})
                 docs = db_handle.read_docs({'storage': {'$exists': False}})
+                # for doc in docs:
+                #     temp = []
+                #     for i in doc['items']:
+                #         if not temp:
+                #             temp.a
+                #         print(i)
                 return render_template('pages/doc.html', user=user, data=docs)
     return redirect('/')
 
@@ -194,10 +200,10 @@ def sign_storage():
         if user:
             if request.form:
                 rf = dict(request.form)
-                rf['storage'] = ''
                 inventory.sign(rf)
                 return redirect('/sign_storage')
-            return render_template('pages/sign_storage.html', user=user, data={'storages': [{'name': 'מחסן'}]})
+            return render_template('pages/sign_storage.html', user=user, users=db_handle.all_users(),
+                                   data={'storages': [{'name': 'מחסן'}], 'items': get_items(user)})
     return redirect('/')
 
 

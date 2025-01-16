@@ -71,11 +71,11 @@ function add_row(){
     document.getElementById('row'+r_index.toString()).style.display = 'table-row';
 }
 
-function add_required(elem_id, cur_val){
+function add_required(elem_id, cur_val, make_alert=true){
     element = document.getElementById(elem_id)
     if (element){
         element.required = true;
-        if (items){
+        if (items && make_alert){
             if (!items.hasOwnProperty(cur_val)){window.alert('פריט לא נמצא במלאי')}
             //if (items.hasOwnProperty(cur_val)){
             //    element.setAttribute('max', items[cur_val])
