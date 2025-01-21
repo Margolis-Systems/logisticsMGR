@@ -341,24 +341,9 @@ def personal():
             if request.form:
                 rf = dict(request.form)
                 db_handle.create_user(rf)
-                # if 'action' in rf:
-                #     if rf['action'] == 'sign':
-                #         inventory.sign(rf, user)
-                #         docs = db_handle.read_docs({'id': rf['id']})
-                #         if docs:
-                #             msg = 'פיקוד העורף - גדוד ניוד\nהוחתמת על ציוד באופן דיגיטלי.\n'
-                #             send = False
-                #             for doc in docs:
-                #                 for item in doc['items']:
-                #                     msg += '\n{} : {} יח'.format(item['description'], item['quantity'])
-                #                     send = True
-                #             if send:
-                #                 token = ''
-                #                 # todo: gen and save token
-                #                 msg += '\nלאישור לחץ:\n{}sms_sign?id={}&token={}'.format(str(request.host_url), rf['id'], token)
-                #                 # sms.send_sms(msg, [rf['phone']])
-                all_users = users.validate_user(request.values['id'], '', True)
-                return render_template('pages/edit_person.html', user=user, users=all_users, data={'items': items})
+                if 'id' in request.values:
+                    all_users = users.validate_user(request.values['id'], '', True)
+                    return render_template('pages/edit_person.html', user=user, users=all_users, data={'items': items})
             elif 'delete' in request.values:
                 user = users.validate_user(request.values['id'], '', True)
                 if not user['docs']:
@@ -368,6 +353,8 @@ def personal():
             elif 'id' in request.values:
                 all_users = users.validate_user(request.values['id'], '', True)
                 return render_template('pages/edit_person.html', user=user, users=all_users, data={'items': items})
+            elif 'new' in request.values:
+                return render_template('pages/new_personal.html', user=user)
             all_users = db_handle.all_users()
             return render_template('pages/personal.html', user=user, users=all_users)
     return redirect('/')

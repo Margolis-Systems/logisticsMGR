@@ -1,0 +1,28 @@
+{% extends 'layout/layout.html' %}
+{% block body %}
+<form method="POST" autocomplete="off">
+    <tr><th colspan="5">הוספת איש קשר חדש</th></tr>
+<tr>
+    <td colspan="2">
+        <input name="id" id="id" type="number" class="form-control-lg sign_inpt" placeholder="מספר אישי" aria-label="Username" aria-describedby="basic-addon1" required autofocus>
+    </td>
+    <td colspan="5"></td>
+</tr>
+<tr>
+    <td colspan="2"><input class="sign_inpt form-control-lg" size="8" name="name" id="name" placeholder="שם פרטי" required></td>
+    <td colspan="5"><input class="sign_inpt form-control-lg" size="8" name="last_name" id="last_name" placeholder="שם משפחה" required></td>
+</tr>
+<tr>
+    <td colspan="2"><input class="sign_inpt form-control-lg" size="8" name="department" id="department" placeholder="מחלקה"></td>
+    <td colspan="5"><input class="sign_inpt form-control-lg" size="8" name="rank" id="rank" placeholder="דרגה"></td>
+</tr>
+<tr>
+    <td colspan="2"><input class="sign_inpt form-control-lg" size="8" type="number" name="phone" id="phone" placeholder="טלפון" required></td>
+    <td colspan="5"><input class="sign_inpt form-control-lg" size="8" type="number" name="car_plate" id="car_plate" placeholder="מס רכב"></td>
+</tr>
+<tr>
+    <td colspan="2"><button class="btn btn-success btn-lg" type="submit">הוסף איש קשר</button> </td>
+    <td colspan="5"><button class="btn btn-danger btn-lg" type="button" onclick="location.reload();">ביטול</button> </td>
+</tr>
+</form>
+{% endblock %}
