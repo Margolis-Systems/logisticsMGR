@@ -19,8 +19,9 @@
 <form method="POST" id="main_form">
     <input type="hidden" name="sign" value="true">
 </form>
-<tr><td colspan="5"><button type="button" onclick="sign_doc()" class="btn btn-lg btn-success">חתימה</button> </td></tr>
+<tr><td colspan="5"><button type="button" onclick="sign_doc()" class="btn btn-lg btn-success">מאשר</button> </td></tr>
 {% else %}
 <tr><th colspan="5">מאושר</th></tr>
 {% endif %}
+<tr><td colspan="5"><button class="btn btn-lg" type="button" onclick="location.reload();" style="background: url(static/img/refresh.png) no-repeat;background-size: 150px 150px;height:150px;width:150px;font-size:40px;">רענן</button></td></tr>
 {% endblock %}
