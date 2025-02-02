@@ -163,6 +163,7 @@ def ret():
             rf = dict(request.form)
             if not rf and request.values:
                 rf = dict(request.values)
+            rf = clear_spaces(rf)
             if rf:
                 if 'ret' in rf:
                     if 'valid' in session:
@@ -199,7 +200,7 @@ def sign_storage():
         user = db_handle.validate_user(session['username'], session['phone'])
         if user:
             if request.form:
-                rf = dict(request.form)
+                rf = clear_spaces(dict(request.form))
                 inventory.sign(rf)
                 return redirect('/sign_storage')
             return render_template('pages/sign_storage.html', user=user, users=db_handle.all_users(),
@@ -214,7 +215,8 @@ def ret_storage():
         if user:
             docs = db_handle.read_docs({'storage': {'$exists': True}})
             if request.form:
-                inventory.ret(dict(request.form), storage=True)
+                rf = clear_spaces(dict(request.form))
+                inventory.ret(rf, storage=True)
                 return redirect('/ret_storage')
             return render_template('pages/return_storage.html', user=user, data={'docs': docs})
     return redirect('/')
@@ -227,7 +229,7 @@ def gas_main():
         if user:
             if user['department'] == 'לוגיסטיקה':
                 if request.form:
-                    rf = dict(request.form)
+                    rf = clear_spaces(dict(request.form))
                     if 'type' in rf:
                         db_handle.update_one('gas', {'storage': {'$exists': True}}, {'$inc': {'{}.{}'.format(rf['type'], rf['liter']): int(rf['quantity'])}})
                     else:
@@ -254,7 +256,7 @@ def sign_gas():
         msg = ''
         if user:
             if request.form:
-                rf = dict(request.form)
+                rf = clear_spaces(dict(request.form))
                 photo = None
                 if 'file' in request.files:
                     if request.files['file']:
@@ -299,12 +301,12 @@ def ret_gas():
         if user:
             docs = {}
             msg = ''
-            rf = dict(request.form)
+            rf = clear_spaces(dict(request.form))
             if not rf and request.values:
                 rf = dict(request.values)
             if rf:
                 if len(rf.keys()) > 1:
-                    gas.ret(dict(request.form), user)
+                    gas.ret(rf, user)
                     return redirect('/ret_gas?id={}'.format(rf['id']))
                 docs = db_handle.read_docs({'id': rf['id']}, 'gas')
                 if not docs:
@@ -339,7 +341,7 @@ def personal():
         if user:
             items = get_items(user)
             if request.form:
-                rf = dict(request.form)
+                rf = clear_spaces(dict(request.form))
                 db_handle.create_user(rf)
                 if 'id' in request.values:
                     all_users = users.validate_user(request.values['id'], '', True)
@@ -403,6 +405,13 @@ def download():
                 # file = file_handler.CSV.create_csv('static/csv/{}.csv'.format(file_name), data, headers)
                 return send_from_directory(os.path.dirname(file), os.path.basename(file), as_attachment=True, mimetype="Content-Type: text/csv; charset=utf-8")
     return '', 204
+
+
+def clear_spaces(data):
+    clean = []
+    for k in data:
+        clean[k.strip()] = data[k]
+    return clean
 
 
 def get_items(user):
